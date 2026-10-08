@@ -11,9 +11,16 @@ const { Content } = await render(entry);
 const date = entry.data.date;
 ---
 <Base title={entry.data.title} description={entry.data.summary} type="article">
-  <article class="prose">
-    <h1>{entry.data.title}</h1>
-    <p class="facts"><time datetime={date.toISOString().slice(0, 10)}>{date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}</time></p>
-    <Content />
+  <article style="--c:var(--blue)">
+    <header class="wrap doc-hero">
+      <a class="back" href="/#notes">← All notes</a>
+      <h1 data-reveal>{entry.data.title}</h1>
+      <p class="lead" data-reveal style="--d:80ms">{entry.data.summary}</p>
+      <p class="muted" style="margin-top:1.5rem;font:0.8125rem var(--mono)"><time datetime={date.toISOString().slice(0, 10)}>{date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}</time></p>
+    </header>
+    <div class="wrap doc">
+      <span></span>
+      <div class="prose"><Content /></div>
+    </div>
   </article>
 </Base>

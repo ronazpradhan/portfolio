@@ -1,0 +1,63 @@
+---
+// The Jutpatti design decision as a toggle: what reaches a player's browser in each design.
+const mine = [['2', '♦', 1], ['6', '♦', 1], ['9', '♥', 1], ['J', '♣', 0], ['Q', '♠', 0], ['Q', '♥', 1], ['K', '♣', 0]] as const;
+const theirs = [['8', '♠', 0], ['8', '♦', 1], ['3', '♣', 0], ['3', '♥', 1], ['A', '♠', 0], ['7', '♦', 1], ['10', '♣', 0]] as const;
+const card = (c: readonly [string, string, number]) => `${c[0]}${c[1]}`;
+---
+<div class="demo" id="trust" data-mode="server">
+  <div class="panel" data-reveal>
+    <h3>The table, as your browser sees it <span style="text-transform:none">(example hand)</span></h3>
+    <div class="felt">
+      <div class="seat">
+        <b>Aarav</b>
+        <div class="mini opp" aria-label="Opponent's cards">
+          {theirs.map((c) => <span class={c[2] ? 'r' : undefined}>{card(c)}</span>)}
+        </div>
+        <span class="badge leak"></span>
+      </div>
+      <div class="seat">
+        <b>You</b>
+        <div class="mini up" aria-label="Your cards">
+          {mine.map((c) => <span class={c[2] ? 'r' : undefined}>{card(c)}</span>)}
+        </div>
+      </div>
+    </div>
+    <p class="demo-note">
+      <span class="only-server"><strong>Server-authoritative.</strong> The deck and every hand live on the server. Your browser can't leak Aarav's cards because it never receives them.</span>
+      <span class="only-naive"><strong>Browser runs the game.</strong> Simple to build, which is how my Ludo works. For cards, it means anyone who opens DevTools can read every hand.</span>
+    </p>
+  </div>
+  <div class="panel" data-reveal style="--d:120ms">
+    <h3>WebSocket message to your browser</h3>
+<pre class="json only-server" aria-label="Server-authoritative payload"><code>{'{'}
+  <span class="k">"current"</span>: <span class="s">"aarav"</span>,
+  <span class="k">"stockCount"</span>: <span class="n">37</span>,
+  <span class="k">"players"</span>: [
+    {'{'} <span class="k">"pid"</span>: <span class="s">"aarav"</span>, <span class="k">"cards"</span>: <span class="n">7</span> {'}'},
+    {'{'} <span class="k">"pid"</span>: <span class="s">"you"</span>,   <span class="k">"cards"</span>: <span class="n">7</span> {'}'}
+  ],
+  <span class="k">"you"</span>: {'{'}
+    <span class="k">"hand"</span>: [<span class="s">"2♦"</span>,<span class="s">"6♦"</span>,<span class="s">"9♥"</span>,<span class="s">"J♣"</span>,<span class="s">"Q♠"</span>,<span class="s">"Q♥"</span>,<span class="s">"K♣"</span>],
+    <span class="k">"validMoves"</span>: [ … ]
+  {'}'}
+{'}'}</code></pre>
+<pre class="json only-naive" aria-label="Naive payload"><code>{'{'}
+  <span class="k">"current"</span>: <span class="s">"aarav"</span>,
+  <span class="k">"deck"</span>: <span class="bad">[<span class="s">"4♠"</span>,<span class="s">"J♦"</span>, … 37 more]</span>,
+  <span class="k">"hands"</span>: {'{'}
+    <span class="k">"you"</span>:   [<span class="s">"2♦"</span>,<span class="s">"6♦"</span>,<span class="s">"9♥"</span>,<span class="s">"J♣"</span>,<span class="s">"Q♠"</span>,<span class="s">"Q♥"</span>,<span class="s">"K♣"</span>],
+    <span class="k">"aarav"</span>: <span class="bad">[<span class="s">"8♠"</span>,<span class="s">"8♦"</span>,<span class="s">"3♣"</span>,<span class="s">"3♥"</span>,<span class="s">"A♠"</span>,<span class="s">"7♦"</span>,<span class="s">"10♣"</span>]</span>
+  {'}'}
+{'}'}</code></pre>
+    <p class="demo-note">The real version is built by one function, <code>viewFor(state, player)</code>, in <code>games/jutpatti/engine.js</code>. It's the only place that decides what a player may see, so it's the first thing the anti-cheat tests check.</p>
+  </div>
+</div>
+<script>
+  const root = document.getElementById('trust')!;
+  document.querySelectorAll<HTMLButtonElement>('[data-set-mode]').forEach((b) =>
+    b.addEventListener('click', () => {
+      root.dataset.mode = b.dataset.setMode;
+      document.querySelectorAll('[data-set-mode]').forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+    }),
+  );
+</script>

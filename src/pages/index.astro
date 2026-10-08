@@ -1,26 +1,25 @@
 ---
 import { getCollection } from 'astro:content';
-import { Picture } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import Die from '../components/Die.astro';
+import Hand from '../components/Hand.astro';
+import TrustDemo from '../components/TrustDemo.astro';
 import { site } from '../site';
 import { log, questions } from '../data';
-import metrics from '../metrics.json';
-import ludo from '../assets/ludo.png';
-import jutpatti from '../assets/jutpatti.png';
 
 const notes = (await getCollection('notes')).sort((a, b) => +b.data.date - +a.data.date);
-const m = metrics as Partial<Record<'measured' | 'js' | 'page' | 'fonts' | 'images', string>>;
+const colors = ['var(--yellow)', 'var(--blue)', 'var(--red)', 'var(--green)'];
 const fmt = (d: string | Date) =>
   new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
 
 const cifar = [
-  { name: 'Random Forest', acc: 43.74 },
-  { name: 'KNN', acc: 36.25 },
-  { name: 'Gaussian NB', acc: 31.22 },
-  { name: 'Decision Tree', acc: 25.62 },
-  { name: 'CNN (teammate)', acc: 85.4, them: true },
+  { name: 'Random Forest', acc: 43.74, f1: '0.43', c: 'var(--green)' },
+  { name: 'K-Nearest Neighbors', acc: 36.25, f1: '0.35', c: 'var(--blue)' },
+  { name: 'Gaussian Naive Bayes', acc: 31.22, f1: '0.31', c: 'var(--yellow)' },
+  { name: 'Decision Tree', acc: 25.62, f1: '0.25', c: 'var(--red)' },
+  { name: 'CNN · teammate’s model', acc: 85.4, f1: '0.85', c: 'var(--muted)', them: true },
 ];
-const shot = { formats: ['avif', 'webp'] as const, widths: [280, 420, 560], sizes: '(min-width: 42rem) 19rem, 46vw', loading: 'lazy' as const };
+const github = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5Z"/></svg>`;
 
 const jsonld = {
   '@context': 'https://schema.org',
@@ -29,101 +28,137 @@ const jsonld = {
   url: site.url,
   sameAs: [site.github],
   affiliation: { '@type': 'CollegeOrUniversity', name: 'Tribhuvan University' },
+  knowsAbout: ['Web development', 'Machine learning', 'Data science'],
 };
 ---
 <Base jsonld={jsonld}>
-  <h1>Ronaz Pradhan</h1>
-  <p>
-    I study Computer Science and IT at Tribhuvan University in Nepal (4th semester, graduating 2028).
-    I build web products, and I'm learning machine learning the same way: by building something and then
-    measuring whether it actually works.
-  </p>
-  <p>
-    Right now that means online Ludo and Jutpatti you can play with friends without ads or coin shops.
-    Before that, a CIFAR-10 comparison of classical models for a university AI course.
-  </p>
-  <p class="small muted">
-    <a href={site.github}>GitHub</a>{site.email && <> · <a href={`mailto:${site.email}`}>{site.email}</a></>}
-  </p>
-
-  <h2 id="projects">Projects</h2>
-
-  <section class="project" aria-labelledby="p-games">
-    <h3 id="p-games"><a href="/work/ludo">Ludo</a> and <a href="/work/jutpatti">Jutpatti</a></h3>
-    <p class="stack">Node.js · ws · vanilla JS · 51 tests</p>
-    <p>
-      Two multiplayer games on one small Node server. Ludo lets the browsers run the game and the server relays
-      moves. Jutpatti can't work that way, because a card game has hidden hands, so the server deals, holds every
-      hand, and sends each player only their own cards.
-    </p>
-    <figure>
-      <div class="shots">
-        <Picture src={ludo} alt="Ludo board on a phone: four coloured home areas, one human player against three computer players." {...shot} />
-        <Picture src={jutpatti} alt="Jutpatti table on a phone: my seven cards along the bottom, the opponent shown only as a name and a card count of 7." {...shot} />
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow" data-reveal>BSc CSIT · Tribhuvan University · Nepal</span>
+        <h1 data-reveal style="--d:60ms"><span>Ronaz</span><span class="accent">Pradhan.</span></h1>
+        <p class="tagline" data-reveal style="--d:120ms">
+          I build <strong>web products</strong> and <strong>intelligent systems</strong>, mostly multiplayer games right now, with machine learning next.
+        </p>
+        <div class="ctas" data-reveal style="--d:180ms">
+          <a class="btn primary" href="#work">See the work →</a>
+          <a class="btn" href={site.github}><Fragment set:html={github} />GitHub</a>
+        </div>
+        <ul class="chips" data-reveal style="--d:240ms" aria-label="Tools I use">
+          <li>TypeScript</li><li>Node.js</li><li>WebSockets</li><li>Python</li><li>scikit-learn</li><li>React Native</li>
+        </ul>
       </div>
-      <figcaption>Both running locally, captured at phone size. On the right, the other player is just “Aarav · 7”: the browser never receives their cards.</figcaption>
-    </figure>
-    <p>This is the function that decides what each player is allowed to see (trimmed, from <code>games/jutpatti/engine.js</code>). Opponents become a count; someone else's draw shows its card only if it came off the discard pile, which everyone saw anyway.</p>
-    <pre><code>{`players: state.players.map(p => ({ pid: p, cards: state.hands[p].length, active: ... })),
-// ...
-if (ld) v.lastDraw = { pid: ld.pid, source: ld.source,
-  card: ld.source === 'discard' || ld.pid === pid ? ld.card : null };
-if (mine && state.active.includes(pid)) {
-  v.you = { hand: mine.slice(), validMoves: getValidMoves(state, pid) };
-}`}</code></pre>
-    <p class="small"><a href="/work/jutpatti">Jutpatti write-up</a> · <a href="/work/ludo">Ludo write-up</a> · <a href="https://github.com/ronazpradhan/ludo3d">Source</a></p>
+      <Die />
+    </div>
   </section>
 
-  <section class="project" aria-labelledby="p-cifar">
-    <h3 id="p-cifar"><a href="/work/cifar-10">CIFAR-10: classical ML against a CNN</a></h3>
-    <p class="stack">Python · scikit-learn · PCA · Colab</p>
-    <p>
-      A two-person course project. I did the classical side: standardise, PCA down to 95% of the variance, then four
-      models with different assumptions. Test accuracy on 10 classes (chance is 10%):
-    </p>
-    <ul class="bars" aria-label="Test accuracy by model">
-      {cifar.map((r) => (
-        <li class={r.them ? 'them' : undefined}>
-          <span>{r.name}</span>
-          <span class="bar" style={`--w:${r.acc}%`} aria-hidden="true"></span>
-          <span class="n">{r.acc.toFixed(2)}%</span>
-        </li>
-      ))}
-    </ul>
-    <p class="small muted">Dashed: my teammate Aakriti Maharjan's CNN, for comparison. Flattening an image throws away which pixels are neighbours; that gap is mostly the representation, not the model.</p>
+  <section class="section" id="work" style="padding-top:2rem">
+    <div class="wrap">
+      <span class="eyebrow" style="--c:var(--red)" data-reveal>Selected work</span>
+      <h2 class="h2" data-reveal>Four projects, dealt face up.</h2>
+      <p class="intro" data-reveal>Each one has a write-up of the problem, the constraints, the decisions, and what I'd change next time.</p>
+      <Hand />
+    </div>
   </section>
 
-  <section class="project" aria-labelledby="p-money">
-    <h3 id="p-money"><a href="https://github.com/ronazpradhan/money-tracker-web">Money Tracker</a></h3>
-    <p class="stack">React Native · Expo · SQLite</p>
-    <p>An offline-first Android app for logging income and expenses. Data stays on the phone, no account needed. The app source is private while I work on it; the link goes to its public page.</p>
+  <section class="section" id="how" style="background:linear-gradient(var(--bg), var(--bg-2) 40%, var(--bg))">
+    <div class="wrap">
+      <span class="eyebrow" style="--c:var(--blue)" data-reveal>How I think about it</span>
+      <h2 class="h2" data-reveal>Where does the deck live?</h2>
+      <p class="intro" data-reveal>
+        The biggest design call in Jutpatti. Ludo trusts the browser, because every pawn is visible anyway. A card game can't.
+        Flip between the two designs and watch what the network sends.
+      </p>
+      <div class="seg" role="group" aria-label="Choose an architecture" data-reveal>
+        <button type="button" data-set-mode="server" aria-pressed="true">Server holds the deck (what I built)</button>
+        <button type="button" data-set-mode="naive" aria-pressed="false">Browser holds the deck</button>
+      </div>
+      <TrustDemo />
+    </div>
   </section>
 
-  <h2 id="questions">Open questions</h2>
-  <p>Things I want to find out, rather than things I've finished.</p>
-  <ul>
-    {questions.map((x) => (
-      <li>{x.q} <span class="muted">{x.href ? <a href={x.href}>{x.a}</a> : x.a}</span></li>
-    ))}
-  </ul>
+  <section class="section" id="ml">
+    <div class="wrap">
+      <span class="eyebrow" style="--c:var(--green)" data-reveal>Machine learning</span>
+      <h2 class="h2" data-reveal>How far do classical models get on raw pixels?</h2>
+      <div class="ml">
+        <div data-reveal>
+          <div class="stat">43.74%</div>
+          <p class="intro">
+            My best result on CIFAR-10: a Random Forest on PCA-reduced pixels, in a two-person course project
+            for CSC 266. Chance is 10%. My teammate Aakriti Maharjan's CNN reached 85.40%.
+          </p>
+          <p class="intro">
+            The gap isn't really the models. Flattening an image throws away which pixels are neighbours, and
+            the CNN keeps it. Next I want to give classical models better features and see how much of the gap closes.
+          </p>
+          <p style="margin-top:1.5rem"><a class="btn" href="/work/cifar-10">Read the write-up →</a></p>
+        </div>
+        <ul class="bars" aria-label="Test accuracy on CIFAR-10 by model" data-reveal style="--d:100ms">
+          {cifar.map((r) => (
+            <li class={r.them ? 'them' : undefined} style={`--c:${r.c}`}>
+              <div class="row"><span>{r.name}</span><span>{r.acc.toFixed(2)}%</span></div>
+              <div class="track"><div class="fill" style={`--w:${r.acc}%`}></div></div>
+              <span class="meta">macro F1 {r.f1}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
 
-  <h2 id="notes">Notes</h2>
-  <p>Short write-ups of decisions, mostly about this site and the games.</p>
-  <ul class="dated">
-    {notes.map((n) => (
-      <li><time datetime={n.data.date.toISOString().slice(0, 10)}>{fmt(n.data.date)}</time><a href={`/notes/${n.id}`}>{n.data.title}</a></li>
-    ))}
-  </ul>
+  <section class="section" id="notes" style="padding-top:2rem">
+    <div class="wrap">
+      <span class="eyebrow" style="--c:var(--yellow)" data-reveal>Build notes</span>
+      <h2 class="h2" data-reveal>Short notes on decisions.</h2>
+      <div class="notes">
+        {notes.map((n, i) => (
+          <a class="note" href={`/notes/${n.id}`} style={`--c:${colors[i % 4]};--d:${i * 80}ms`} data-reveal>
+            <h3>{n.data.title}</h3>
+            <p>{n.data.summary}</p>
+            <time datetime={n.data.date.toISOString().slice(0, 10)}>{fmt(n.data.date)}</time>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
 
-  <h2 id="changelog">Changelog</h2>
-  <ul class="dated small">
-    {log.map((l) => (
-      <li><time datetime={l.date}>{fmt(l.date)}</time><span>{l.text}</span></li>
-    ))}
-  </ul>
+  <section class="section" id="now" style="padding-top:2rem">
+    <div class="wrap">
+      <span class="eyebrow" style="--c:var(--green)" data-reveal>Now</span>
+      <h2 class="h2" data-reveal>What I'm figuring out.</h2>
+      <div class="now">
+        <div class="panel" data-reveal>
+          <h3>Open questions</h3>
+          <ul>
+            {questions.map((x, i) => (
+              <li style={`--c:${colors[i + 1]}`}>{x.q}<span>{x.href ? <a href={x.href}>{x.a}</a> : x.a}</span></li>
+            ))}
+          </ul>
+        </div>
+        <div class="panel" data-reveal style="--d:100ms">
+          <h3>Changelog for this site</h3>
+          <ul>
+            {log.map((l) => (
+              <li><time datetime={l.date}>{fmt(l.date)}</time>{l.text}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <p slot="foot" style="margin:0 0 0.5rem">
-    This page: {m.page ?? '?'} of HTML and CSS, {m.js ?? '0 KB'} of JavaScript, no web fonts{m.images && <>, and up to {m.images} of lazy-loaded screenshots</>}.
-    Measured from the build{m.measured && <> on {fmt(m.measured)}</>}, <a href="/notes/measured-not-claimed">not typed in</a>. No analytics.
-  </p>
+  <section class="section" id="contact" style="padding-top:2rem">
+    <div class="wrap">
+      <div class="contact" data-reveal>
+        <span class="eyebrow">Contact</span>
+        <h2>Internship, project, or a game of Jutpatti?</h2>
+        <p>I'm looking for chances to work on web products and data science / ML. The fastest way to reach me is GitHub.</p>
+        <div class="ctas">
+          {site.email && <a class="btn primary" href={`mailto:${site.email}`}>Email me</a>}
+          <a class={`btn ${site.email ? '' : 'primary'}`} href={site.github}><Fragment set:html={github} />github.com/ronazpradhan</a>
+        </div>
+      </div>
+    </div>
+  </section>
 </Base>

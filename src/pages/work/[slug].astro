@@ -3,22 +3,36 @@ import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 
 export async function getStaticPaths() {
-  const work = await getCollection('work');
-  return work.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+  const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+  return work.map((entry, i) => ({ params: { slug: entry.id }, props: { entry, next: work[(i + 1) % work.length] } }));
 }
-const { entry } = Astro.props;
-const { Content } = await render(entry);
+const { entry, next } = Astro.props;
+const { Content, headings } = await render(entry);
 const d = entry.data;
+const color = ['var(--red)', 'var(--yellow)', 'var(--green)', 'var(--blue)'][(d.order - 1) % 4];
 ---
 <Base title={d.title} description={d.summary} type="article">
-  <article class="prose">
-    <h1>{d.title}</h1>
-    <p>{d.summary}</p>
-    <p class="facts">
-      <span>{d.kind}</span><span>{d.status}</span><span>{d.role}</span>
-    </p>
-    <p class="stack">{d.stack.join(' · ')}</p>
-    {d.repo && <p class="small"><a href={d.repo}>Source on GitHub</a></p>}
-    <Content />
+  <article style={`--c:${color}`}>
+    <header class="wrap doc-hero">
+      <a class="back" href="/#work">← All work</a>
+      <h1 data-reveal>{d.title}</h1>
+      <p class="lead" data-reveal style="--d:80ms">{d.summary}</p>
+      <dl class="facts" data-reveal style="--d:140ms">
+        <div><dt>Type</dt><dd>{d.kind}</dd></div>
+        <div><dt>Status</dt><dd>{d.status}</dd></div>
+        <div><dt>My role</dt><dd>{d.role}</dd></div>
+        <div><dt>Stack</dt><dd>{d.stack.join(', ')}</dd></div>
+        {d.repo && <div><dt>Source</dt><dd><a href={d.repo}>GitHub ↗</a></dd></div>}
+      </dl>
+    </header>
+    <div class="wrap doc">
+      <nav aria-label="Sections">
+        <ol class="toc">{headings.filter((h) => h.depth === 2).map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol>
+      </nav>
+      <div class="prose">
+        <Content />
+        <p class="next"><a class="btn" href={`/work/${next.id}`} style="color:var(--fg)">Next: {next.data.title} →</a></p>
+      </div>
+    </div>
   </article>
 </Base>

@@ -2,6 +2,9 @@
 import Base from '../layouts/Base.astro';
 ---
 <Base title="Not found">
-  <h1>Nothing here</h1>
-  <p>This page moved or never existed. <a href="/">Go to the homepage</a>.</p>
+  <section class="wrap doc-hero" style="border:0;min-height:60vh">
+    <span class="eyebrow" style="--c:var(--red)">404</span>
+    <h1>You rolled a six and left the board.</h1>
+    <p class="lead">This page doesn't exist. <a href="/" style="color:var(--yellow)">Back to the start</a>.</p>
+  </section>
 </Base>

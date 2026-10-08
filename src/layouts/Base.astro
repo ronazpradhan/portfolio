@@ -1,4 +1,7 @@
 ---
+import '@fontsource-variable/unbounded';
+import '@fontsource-variable/dm-sans';
+import '@fontsource-variable/jetbrains-mono';
 import '../styles/global.css';
 import { site } from '../site';
 
@@ -9,7 +12,7 @@ interface Props {
   jsonld?: object;
 }
 const { title, description = site.description, type = 'website', jsonld } = Astro.props;
-const fullTitle = title ? `${title} · ${site.name}` : site.name;
+const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · web products & machine learning`;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 ---
 <!doctype html>
@@ -17,11 +20,12 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>document.documentElement.classList.add('js')</script>
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <meta name="theme-color" content="#121212" />
+    <meta name="theme-color" content="#0b0d17" />
     <meta property="og:type" content={type} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
@@ -32,20 +36,33 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
-    <div class="page">
-      <nav class="top" aria-label="Primary">
-        <a href="/">Ronaz Pradhan</a>
-        <a href="/#projects">Projects</a>
-        <a href="/#notes">Notes</a>
-        <a href={site.github}>GitHub</a>
-      </nav>
-      <main id="main">
-        <slot />
-      </main>
-      <footer class="foot">
-        <slot name="foot" />
-        <p style="margin:0">Source for this site: <a href={`${site.github}/portfolio`}>github.com/ronazpradhan/portfolio</a></p>
-      </footer>
-    </div>
+    <header class="nav">
+      <div class="wrap">
+        <a class="brand" href="/"><span class="pawns" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Ronaz Pradhan</a>
+        <nav aria-label="Primary">
+          <ul>
+            <li><a href="/#work">Work</a></li>
+            <li><a href="/#ml">ML</a></li>
+            <li><a href="/#notes">Notes</a></li>
+            <li><a href="/#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="wrap foot">
+      <span>© 2026 Ronaz Pradhan · Built with Astro, no framework on the client.</span>
+      <a href={`${site.github}/portfolio`}>Source on GitHub</a>
+    </footer>
+    <script>
+      // Reveal-on-scroll: one observer for the whole page.
+      const io = new IntersectionObserver(
+        (entries) => entries.forEach((e) => e.isIntersecting && (e.target.classList.add('in'), io.unobserve(e.target))),
+        { rootMargin: '0px 0px -10% 0px' },
+      );
+      document.querySelectorAll('[data-reveal], .bars').forEach((el) => io.observe(el));
+    </script>
   </body>
 </html>

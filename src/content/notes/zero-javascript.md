@@ -1,25 +1,22 @@
 ---
-title: Why this site ships no JavaScript
-summary: A portfolio is a document. Documents don't need a runtime to be read.
+title: Interactive, without a framework
+summary: The die, the card hand and the Jutpatti demo on the homepage are a few dozen lines of plain TypeScript. Everything else is HTML.
 date: 2026-10-08
 ---
 
-My earlier portfolios were React apps with GSAP. They worked, but every visitor downloaded a framework to read a few paragraphs of text and a list of links.
+My earlier portfolios were React apps with GSAP. This one is built with [Astro](https://astro.build), and the interesting parts are still interactive. They just don't need a framework.
 
-This version is built with [Astro](https://astro.build). Pages are rendered to HTML at build time, and nothing is hydrated in the browser. The result:
+## What each piece actually is
 
-- The first byte of HTML already contains the content. No blank screen while a bundle parses.
-- Nothing to execute on a slow phone's main thread, so nothing to block taps.
-- Fewer things to break. A page with no scripts can't throw.
+- **The card hand** is pure CSS. The fan is a `rotate()` per card, and hovering the hand resets the rotation and spreads the margins. On a phone it becomes a scroll-snap row instead, because hovering doesn't exist there.
+- **The die** is six `div`s in a CSS 3D cube. Rolling picks a number, sets one `transform`, and swaps the text in the fact box. Every face is something true about my work.
+- **The "where does the deck live" demo** flips a single `data-mode` attribute. CSS does the rest: card faces turn over, and the JSON panel swaps to show what the server would send.
+- **Scroll reveals** are one `IntersectionObserver` for the whole page. If JavaScript doesn't run, nothing is hidden.
 
-## What replaced the JavaScript
+## Why not React here
 
-- **Animation:** none, apart from the page cross-fade below. GSAP is a good library; a portfolio of text and screenshots doesn't need it.
-- **Page transitions:** the CSS `@view-transition` rule. Browsers that support it cross-fade between pages; browsers that don't just navigate. No router.
-- **Fonts:** none. The first version loaded two variable fonts (about 71 KB). The serif already on your device is good enough, and costs nothing.
+Nothing on these pages shares state between components or re-renders from data. React would add a runtime to do what three event listeners already do. If I add a live model demo later, that one component can be an island with its own framework, loaded only on its page.
 
-## When I would add JavaScript
+## What I kept on purpose
 
-When something on the page is actually interactive, such as a live demo of a model or a playable game board, I'd add it as an island: a script for that one component, loaded only on the page that needs it. Astro supports this directly, which is the main reason I picked it over a plain static site generator.
-
-Until then, the right amount is zero.
+`prefers-reduced-motion` turns off the reveals and the die's spin; the die still works, it just changes face instantly. Every section reads fine with animation off.
