@@ -1,0 +1,159 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { site } from '../site';
+import { log, experiments, otherWork } from '../data';
+import metrics from '../metrics.json';
+
+const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+const notes = (await getCollection('notes')).sort((a, b) => +b.data.date - +a.data.date);
+const m = metrics as Partial<Record<'measured' | 'js' | 'html' | 'css' | 'fonts' | 'total', string>>;
+const pad = (i: number) => String(i + 1).padStart(2, '0');
+const fmt = (d: string | Date) =>
+  new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC' }).toUpperCase();
+
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  url: site.url,
+  sameAs: [site.github],
+  affiliation: { '@type': 'CollegeOrUniversity', name: 'Tribhuvan University' },
+  address: { '@type': 'PostalAddress', addressCountry: 'NP' },
+  knowsAbout: ['Web development', 'Machine learning', 'Data science'],
+};
+---
+<Base jsonld={jsonld}>
+  <section class="row hero" aria-labelledby="name">
+    <p class="label">BSc CSIT · <b>2028</b></p>
+    <div>
+      <h1 id="name">Ronaz Pradhan</h1>
+      <p class="lede">I build web products and machine-learning experiments, and check how both behave on a cheap phone.</p>
+      <p class="meta rise" style="--d:80ms">4th semester, Tribhuvan University. Based in Nepal.</p>
+      <p class="actions rise" style="--d:140ms">
+        <a href="#work">View work</a>
+        <a href={site.github}>GitHub</a>
+        <a href="#contact">Contact</a>
+      </p>
+      <p class="colophon rise" style="--d:200ms" aria-label="About this page">
+        <span>This page: {m.js ?? '0 KB'} JavaScript</span>
+        {m.total && <span>{m.total} on first load</span>}
+        <span>No trackers</span>
+        <a href="#performance">How this is measured</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="row" id="work" aria-labelledby="work-h">
+    <h2 class="label" id="work-h"><b>01</b> Selected work</h2>
+    <div>
+      <ol class="index">
+        {work.map((w, i) => (
+          <li>
+            <a class="entry" href={`/work/${w.id}`}>
+              <span class="n">{pad(i)}</span>
+              <h3>{w.data.title}</h3>
+              <p>{w.data.summary}</p>
+              <span class="tags">{w.data.kind} · {w.data.status}<br />{w.data.stack.join(' · ')}</span>
+            </a>
+          </li>
+        ))}
+        {otherWork.map((w, i) => (
+          <li>
+            <a class="entry" href={w.href}>
+              <span class="n">{pad(work.length + i)}</span>
+              <h3>{w.title}</h3>
+              <p>{w.summary} Source is private; the link goes to its public page.</p>
+              <span class="tags">Android app<br />{w.stack.join(' · ')}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="row" id="experiments" aria-labelledby="exp-h">
+    <h2 class="label" id="exp-h"><b>02</b> Questions I'm testing</h2>
+    <dl class="qa">
+      {experiments.map((e) => (
+        <div>
+          <dt>{e.href ? <a href={e.href}>{e.q}</a> : e.q}</dt>
+          <dd><span class="status" data-s={e.status}>{e.status}</span>{e.a}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  <section class="row" id="notes" aria-labelledby="notes-h">
+    <h2 class="label" id="notes-h"><b>03</b> Build notes</h2>
+    <div>
+      <p class="fine" style="margin:0 0 1.25rem">Short write-ups on decisions behind this site and my projects. Written when something was decided, not to fill a blog.</p>
+      <ol class="index">
+        {notes.map((n, i) => (
+          <li>
+            <a class="entry" href={`/notes/${n.id}`}>
+              <span class="n">{pad(i)}</span>
+              <h3>{n.data.title}</h3>
+              <p>{n.data.summary}</p>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="row" id="performance" aria-labelledby="perf-h">
+    <h2 class="label" id="perf-h"><b>04</b> This page, measured</h2>
+    <div>
+      <dl class="metrics">
+        <div><dt>JavaScript</dt><dd>{m.js ?? '0 KB'}</dd></div>
+        <div><dt>HTML + CSS</dt>{m.html ? <dd>{m.html}</dd> : <dd class="pending">Not measured</dd>}</div>
+        <div><dt>Fonts</dt>{m.fonts ? <dd>{m.fonts}</dd> : <dd class="pending">Not measured</dd>}</div>
+        <div><dt>Lighthouse</dt><dd class="pending">Not run yet. Shown once tested on a real device.</dd></div>
+      </dl>
+      <p class="fine">
+        Sizes are compressed (gzip) bytes for this homepage, computed from the build output by
+        <code>scripts/measure.mjs</code>{m.measured && <> on {fmt(m.measured)}</>}. Fonts are two
+        variable files (Fraunces, Epilogue), Latin subset only. No number on this site is typed in by hand.
+      </p>
+    </div>
+  </section>
+
+  <section class="row" id="log" aria-labelledby="log-h">
+    <h2 class="label" id="log-h"><b>05</b> Engineering log</h2>
+    <ol class="log" reversed>
+      {log.map((l) => (
+        <li><time datetime={l.date}>{fmt(l.date)}</time><span>{l.text}</span></li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="row" id="about" aria-labelledby="about-h">
+    <h2 class="label" id="about-h"><b>06</b> About</h2>
+    <div class="prose">
+      <p>I'm a 4th-semester BSc CSIT student at Tribhuvan University, graduating in 2028.</p>
+      <p>
+        Most of what I've shipped is web and mobile: a multiplayer Ludo and Jutpatti server, an offline-first
+        finance app. I like problems where the constraints are real: hidden information in a card game,
+        flaky mobile connections, a phone with 2&nbsp;GB of RAM.
+      </p>
+      <p>
+        I'm moving toward data science and machine learning. So far that means classical models and
+        evaluation (my part of a CIFAR-10 comparison); next is learning to put a trained model behind
+        a product without making it slow.
+      </p>
+      <p>I use AI tools while I code. I still read the diff.</p>
+    </div>
+  </section>
+
+  <section class="row" id="contact" aria-labelledby="contact-h">
+    <h2 class="label" id="contact-h"><b>07</b> Contact</h2>
+    <div class="prose">
+      <p class="lede" style="margin:0">Open to internships and collaboration in web development, data science and ML.</p>
+      <p class="actions">
+        {site.email && <a href={`mailto:${site.email}`}>{site.email}</a>}
+        <a href={site.github}>github.com/ronazpradhan</a>
+      </p>
+    </div>
+  </section>
+</Base>
