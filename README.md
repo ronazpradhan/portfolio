@@ -12,7 +12,8 @@ npm run build     # build → measure page weight → build again (see scripts/m
 
 ```
 src/site.ts              name, URL, GitHub, email (empty = hidden)
-src/data.ts              engineering log, experiments, non-case-study projects
+src/assets/*.png         real screenshots of the games (Astro converts to AVIF/WebP)
+src/data.ts              changelog and open questions
 src/content/work/*.md    case studies (Problem → Constraints → Decisions → … → What I'd change)
 src/content/notes/*.md   build notes
 src/styles/global.css    the whole design system, one file

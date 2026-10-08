@@ -1,16 +1,26 @@
 ---
 import { getCollection } from 'astro:content';
+import { Picture } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import { site } from '../site';
-import { log, experiments, otherWork } from '../data';
+import { log, questions } from '../data';
 import metrics from '../metrics.json';
+import ludo from '../assets/ludo.png';
+import jutpatti from '../assets/jutpatti.png';
 
-const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
 const notes = (await getCollection('notes')).sort((a, b) => +b.data.date - +a.data.date);
-const m = metrics as Partial<Record<'measured' | 'js' | 'html' | 'css' | 'fonts' | 'total', string>>;
-const pad = (i: number) => String(i + 1).padStart(2, '0');
+const m = metrics as Partial<Record<'measured' | 'js' | 'page' | 'fonts' | 'images', string>>;
 const fmt = (d: string | Date) =>
-  new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC' }).toUpperCase();
+  new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+
+const cifar = [
+  { name: 'Random Forest', acc: 43.74 },
+  { name: 'KNN', acc: 36.25 },
+  { name: 'Gaussian NB', acc: 31.22 },
+  { name: 'Decision Tree', acc: 25.62 },
+  { name: 'CNN (teammate)', acc: 85.4, them: true },
+];
+const shot = { formats: ['avif', 'webp'] as const, widths: [280, 420, 560], sizes: '(min-width: 42rem) 19rem, 46vw', loading: 'lazy' as const };
 
 const jsonld = {
   '@context': 'https://schema.org',
@@ -19,141 +29,101 @@ const jsonld = {
   url: site.url,
   sameAs: [site.github],
   affiliation: { '@type': 'CollegeOrUniversity', name: 'Tribhuvan University' },
-  address: { '@type': 'PostalAddress', addressCountry: 'NP' },
-  knowsAbout: ['Web development', 'Machine learning', 'Data science'],
 };
 ---
 <Base jsonld={jsonld}>
-  <section class="row hero" aria-labelledby="name">
-    <p class="label">BSc CSIT · <b>2028</b></p>
-    <div>
-      <h1 id="name">Ronaz Pradhan</h1>
-      <p class="lede">I build web products and machine-learning experiments, and check how both behave on a cheap phone.</p>
-      <p class="meta rise" style="--d:80ms">4th semester, Tribhuvan University. Based in Nepal.</p>
-      <p class="actions rise" style="--d:140ms">
-        <a href="#work">View work</a>
-        <a href={site.github}>GitHub</a>
-        <a href="#contact">Contact</a>
-      </p>
-      <p class="colophon rise" style="--d:200ms" aria-label="About this page">
-        <span>This page: {m.js ?? '0 KB'} JavaScript</span>
-        {m.total && <span>{m.total} on first load</span>}
-        <span>No trackers</span>
-        <a href="#performance">How this is measured</a>
-      </p>
-    </div>
+  <h1>Ronaz Pradhan</h1>
+  <p>
+    I study Computer Science and IT at Tribhuvan University in Nepal (4th semester, graduating 2028).
+    I build web products, and I'm learning machine learning the same way: by building something and then
+    measuring whether it actually works.
+  </p>
+  <p>
+    Right now that means online Ludo and Jutpatti you can play with friends without ads or coin shops.
+    Before that, a CIFAR-10 comparison of classical models for a university AI course.
+  </p>
+  <p class="small muted">
+    <a href={site.github}>GitHub</a>{site.email && <> · <a href={`mailto:${site.email}`}>{site.email}</a></>}
+  </p>
+
+  <h2 id="projects">Projects</h2>
+
+  <section class="project" aria-labelledby="p-games">
+    <h3 id="p-games"><a href="/work/ludo">Ludo</a> and <a href="/work/jutpatti">Jutpatti</a></h3>
+    <p class="stack">Node.js · ws · vanilla JS · 51 tests</p>
+    <p>
+      Two multiplayer games on one small Node server. Ludo lets the browsers run the game and the server relays
+      moves. Jutpatti can't work that way, because a card game has hidden hands, so the server deals, holds every
+      hand, and sends each player only their own cards.
+    </p>
+    <figure>
+      <div class="shots">
+        <Picture src={ludo} alt="Ludo board on a phone: four coloured home areas, one human player against three computer players." {...shot} />
+        <Picture src={jutpatti} alt="Jutpatti table on a phone: my seven cards along the bottom, the opponent shown only as a name and a card count of 7." {...shot} />
+      </div>
+      <figcaption>Both running locally, captured at phone size. On the right, the other player is just “Aarav · 7”: the browser never receives their cards.</figcaption>
+    </figure>
+    <p>This is the function that decides what each player is allowed to see (trimmed, from <code>games/jutpatti/engine.js</code>). Opponents become a count; someone else's draw shows its card only if it came off the discard pile, which everyone saw anyway.</p>
+    <pre><code>{`players: state.players.map(p => ({ pid: p, cards: state.hands[p].length, active: ... })),
+// ...
+if (ld) v.lastDraw = { pid: ld.pid, source: ld.source,
+  card: ld.source === 'discard' || ld.pid === pid ? ld.card : null };
+if (mine && state.active.includes(pid)) {
+  v.you = { hand: mine.slice(), validMoves: getValidMoves(state, pid) };
+}`}</code></pre>
+    <p class="small"><a href="/work/jutpatti">Jutpatti write-up</a> · <a href="/work/ludo">Ludo write-up</a> · <a href="https://github.com/ronazpradhan/ludo3d">Source</a></p>
   </section>
 
-  <section class="row" id="work" aria-labelledby="work-h">
-    <h2 class="label" id="work-h"><b>01</b> Selected work</h2>
-    <div>
-      <ol class="index">
-        {work.map((w, i) => (
-          <li>
-            <a class="entry" href={`/work/${w.id}`}>
-              <span class="n">{pad(i)}</span>
-              <h3>{w.data.title}</h3>
-              <p>{w.data.summary}</p>
-              <span class="tags">{w.data.kind} · {w.data.status}<br />{w.data.stack.join(' · ')}</span>
-            </a>
-          </li>
-        ))}
-        {otherWork.map((w, i) => (
-          <li>
-            <a class="entry" href={w.href}>
-              <span class="n">{pad(work.length + i)}</span>
-              <h3>{w.title}</h3>
-              <p>{w.summary} Source is private; the link goes to its public page.</p>
-              <span class="tags">Android app<br />{w.stack.join(' · ')}</span>
-            </a>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
-
-  <section class="row" id="experiments" aria-labelledby="exp-h">
-    <h2 class="label" id="exp-h"><b>02</b> Questions I'm testing</h2>
-    <dl class="qa">
-      {experiments.map((e) => (
-        <div>
-          <dt>{e.href ? <a href={e.href}>{e.q}</a> : e.q}</dt>
-          <dd><span class="status" data-s={e.status}>{e.status}</span>{e.a}</dd>
-        </div>
+  <section class="project" aria-labelledby="p-cifar">
+    <h3 id="p-cifar"><a href="/work/cifar-10">CIFAR-10: classical ML against a CNN</a></h3>
+    <p class="stack">Python · scikit-learn · PCA · Colab</p>
+    <p>
+      A two-person course project. I did the classical side: standardise, PCA down to 95% of the variance, then four
+      models with different assumptions. Test accuracy on 10 classes (chance is 10%):
+    </p>
+    <ul class="bars" aria-label="Test accuracy by model">
+      {cifar.map((r) => (
+        <li class={r.them ? 'them' : undefined}>
+          <span>{r.name}</span>
+          <span class="bar" style={`--w:${r.acc}%`} aria-hidden="true"></span>
+          <span class="n">{r.acc.toFixed(2)}%</span>
+        </li>
       ))}
-    </dl>
+    </ul>
+    <p class="small muted">Dashed: my teammate Aakriti Maharjan's CNN, for comparison. Flattening an image throws away which pixels are neighbours; that gap is mostly the representation, not the model.</p>
   </section>
 
-  <section class="row" id="notes" aria-labelledby="notes-h">
-    <h2 class="label" id="notes-h"><b>03</b> Build notes</h2>
-    <div>
-      <p class="fine" style="margin:0 0 1.25rem">Short write-ups on decisions behind this site and my projects. Written when something was decided, not to fill a blog.</p>
-      <ol class="index">
-        {notes.map((n, i) => (
-          <li>
-            <a class="entry" href={`/notes/${n.id}`}>
-              <span class="n">{pad(i)}</span>
-              <h3>{n.data.title}</h3>
-              <p>{n.data.summary}</p>
-            </a>
-          </li>
-        ))}
-      </ol>
-    </div>
+  <section class="project" aria-labelledby="p-money">
+    <h3 id="p-money"><a href="https://github.com/ronazpradhan/money-tracker-web">Money Tracker</a></h3>
+    <p class="stack">React Native · Expo · SQLite</p>
+    <p>An offline-first Android app for logging income and expenses. Data stays on the phone, no account needed. The app source is private while I work on it; the link goes to its public page.</p>
   </section>
 
-  <section class="row" id="performance" aria-labelledby="perf-h">
-    <h2 class="label" id="perf-h"><b>04</b> This page, measured</h2>
-    <div>
-      <dl class="metrics">
-        <div><dt>JavaScript</dt><dd>{m.js ?? '0 KB'}</dd></div>
-        <div><dt>HTML + CSS</dt>{m.html ? <dd>{m.html}</dd> : <dd class="pending">Not measured</dd>}</div>
-        <div><dt>Fonts</dt>{m.fonts ? <dd>{m.fonts}</dd> : <dd class="pending">Not measured</dd>}</div>
-        <div><dt>Lighthouse</dt><dd class="pending">Not run yet. Shown once tested on a real device.</dd></div>
-      </dl>
-      <p class="fine">
-        Sizes are compressed (gzip) bytes for this homepage, computed from the build output by
-        <code>scripts/measure.mjs</code>{m.measured && <> on {fmt(m.measured)}</>}. Fonts are two
-        variable files (Fraunces, Epilogue), Latin subset only. No number on this site is typed in by hand.
-      </p>
-    </div>
-  </section>
+  <h2 id="questions">Open questions</h2>
+  <p>Things I want to find out, rather than things I've finished.</p>
+  <ul>
+    {questions.map((x) => (
+      <li>{x.q} <span class="muted">{x.href ? <a href={x.href}>{x.a}</a> : x.a}</span></li>
+    ))}
+  </ul>
 
-  <section class="row" id="log" aria-labelledby="log-h">
-    <h2 class="label" id="log-h"><b>05</b> Engineering log</h2>
-    <ol class="log" reversed>
-      {log.map((l) => (
-        <li><time datetime={l.date}>{fmt(l.date)}</time><span>{l.text}</span></li>
-      ))}
-    </ol>
-  </section>
+  <h2 id="notes">Notes</h2>
+  <p>Short write-ups of decisions, mostly about this site and the games.</p>
+  <ul class="dated">
+    {notes.map((n) => (
+      <li><time datetime={n.data.date.toISOString().slice(0, 10)}>{fmt(n.data.date)}</time><a href={`/notes/${n.id}`}>{n.data.title}</a></li>
+    ))}
+  </ul>
 
-  <section class="row" id="about" aria-labelledby="about-h">
-    <h2 class="label" id="about-h"><b>06</b> About</h2>
-    <div class="prose">
-      <p>I'm a 4th-semester BSc CSIT student at Tribhuvan University, graduating in 2028.</p>
-      <p>
-        Most of what I've shipped is web and mobile: a multiplayer Ludo and Jutpatti server, an offline-first
-        finance app. I like problems where the constraints are real: hidden information in a card game,
-        flaky mobile connections, a phone with 2&nbsp;GB of RAM.
-      </p>
-      <p>
-        I'm moving toward data science and machine learning. So far that means classical models and
-        evaluation (my part of a CIFAR-10 comparison); next is learning to put a trained model behind
-        a product without making it slow.
-      </p>
-      <p>I use AI tools while I code. I still read the diff.</p>
-    </div>
-  </section>
+  <h2 id="changelog">Changelog</h2>
+  <ul class="dated small">
+    {log.map((l) => (
+      <li><time datetime={l.date}>{fmt(l.date)}</time><span>{l.text}</span></li>
+    ))}
+  </ul>
 
-  <section class="row" id="contact" aria-labelledby="contact-h">
-    <h2 class="label" id="contact-h"><b>07</b> Contact</h2>
-    <div class="prose">
-      <p class="lede" style="margin:0">Open to internships and collaboration in web development, data science and ML.</p>
-      <p class="actions">
-        {site.email && <a href={`mailto:${site.email}`}>{site.email}</a>}
-        <a href={site.github}>github.com/ronazpradhan</a>
-      </p>
-    </div>
-  </section>
+  <p slot="foot" style="margin:0 0 0.5rem">
+    This page: {m.page ?? '?'} of HTML and CSS, {m.js ?? '0 KB'} of JavaScript, no web fonts{m.images && <>, and up to {m.images} of lazy-loaded screenshots</>}.
+    Measured from the build{m.measured && <> on {fmt(m.measured)}</>}, <a href="/notes/measured-not-claimed">not typed in</a>. No analytics.
+  </p>
 </Base>

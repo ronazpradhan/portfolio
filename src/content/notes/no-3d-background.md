@@ -10,6 +10,6 @@ Animated 3D hero sections are the default look for developer portfolios right no
 
 **What it says.** Very little that's specific to me. It's the same effect on thousands of sites.
 
-**What I'd rather show.** The work, and how it's built. The typography and the layout here do the job a background effect would do, and they still work with animations off, on a slow connection, or in a screenshot.
+**What I'd rather show.** The work, and how it's built. Screenshots of things I built do the job a background effect would do, and the page still works with animations off, on a slow connection, or in a screenshot.
 
 If a project of mine needs 3D, it gets 3D on that project's page, where the cost buys something.

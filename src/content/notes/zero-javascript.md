@@ -14,10 +14,9 @@ This version is built with [Astro](https://astro.build). Pages are rendered to H
 
 ## What replaced the JavaScript
 
-- **Animation:** one CSS keyframe for the hero metadata, gated behind `prefers-reduced-motion: no-preference`. GSAP is a good library; using it for a fade is not a good reason to ship it.
+- **Animation:** none, apart from the page cross-fade below. GSAP is a good library; a portfolio of text and screenshots doesn't need it.
 - **Page transitions:** the CSS `@view-transition` rule. Browsers that support it cross-fade between pages; browsers that don't just navigate. No router.
-- **Sticky table of contents:** `position: sticky`.
-- **Fonts:** two variable files, Latin subset only, preloaded so text doesn't jump.
+- **Fonts:** none. The first version loaded two variable fonts (about 71 KB). The serif already on your device is good enough, and costs nothing.
 
 ## When I would add JavaScript
 

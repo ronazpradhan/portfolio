@@ -13,6 +13,8 @@ order: 2
 
 Jutpatti is a card game people in Nepal play at home and during festivals, and there isn't a good place to play it online. Copying [Ludo](/work/ludo)'s approach wasn't an option: a card game has hidden information, and the moment a browser holds every player's cards, anyone with dev tools can read them.
 
+![Jutpatti table on a phone: my seven cards along the bottom, the opponent shown only as a name and a card count of 7.](../../assets/jutpatti.png)
+
 ## Constraints
 
 - **Hidden hands.** No client may ever receive another player's cards, or the next card in the stock.
@@ -47,7 +49,7 @@ Jutpatti is a card game people in Nepal play at home and during festivals, and t
 
 ## Results
 
-The test suite covers the deck, the engine, anti-cheat checks, end-to-end server behaviour, and a **statistical fairness test** of the shuffle. "The deal is fair" is something the tests check, not something I promise.
+The repo has 51 tests, and all of them passed when I ran `node --test` on 8 October 2026. They cover the deck, the engine, anti-cheat checks, end-to-end server behaviour, and a **statistical fairness test** of the shuffle. "The deal is fair" is something the tests check, not something I promise.
 
 ## What I'd change
 

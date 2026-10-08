@@ -13,6 +13,8 @@ order: 1
 
 Most Ludo apps people around me play are wrapped in ads, coin shops and timers designed to sell you something. I wanted a version where you open a link, share a room code with friends, and play.
 
+![Ludo board on a phone: one human player against three computer players.](../../assets/ludo.png)
+
 ## Constraints
 
 - Players are on phones, often on mobile data, and connections drop mid-game.
@@ -46,7 +48,7 @@ Most Ludo apps people around me play are wrapped in ads, coin shops and timers d
 
 ## Results
 
-Ludo is playable online with friends, with rejoin, turn timers and bot cover working. The repo has an automated test suite run with Node's built-in test runner (`node --test`).
+Ludo is playable online with friends, with rejoin, turn timers and bot cover working. The repo's test suite (51 tests, run with Node's built-in `node --test`) passed in full on 8 October 2026; most of those tests cover Jutpatti and the shared server.
 
 ## What I'd change
 
