@@ -4,6 +4,10 @@ const mine = [['2', '♦', 1], ['6', '♦', 1], ['9', '♥', 1], ['J', '♣', 0]
 const theirs = [['8', '♠', 0], ['8', '♦', 1], ['3', '♣', 0], ['3', '♥', 1], ['A', '♠', 0], ['7', '♦', 1], ['10', '♣', 0]] as const;
 const card = (c: readonly [string, string, number]) => `${c[0]}${c[1]}`;
 ---
+<div class="seg" role="group" aria-label="Choose an architecture">
+  <button type="button" data-set-mode="server" aria-pressed="true">Server holds the deck (what I built)</button>
+  <button type="button" data-set-mode="naive" aria-pressed="false">Browser holds the deck</button>
+</div>
 <div class="demo" id="trust" data-mode="server">
   <div class="panel" data-reveal>
     <h3>The table, as your browser sees it <span style="text-transform:none">(example hand)</span></h3>

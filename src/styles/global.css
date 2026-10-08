@@ -50,10 +50,8 @@ code, pre { font-family: var(--mono); font-size: 0.85em; }
 .nav { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); background: rgb(11 13 23 / 0.72); border-bottom: 1px solid var(--line); }
 .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 4rem; gap: 1rem; }
 .brand { display: inline-flex; align-items: center; gap: 0.6rem; font: 600 0.95rem var(--display); text-decoration: none; }
-.pawns { display: inline-grid; grid-template-columns: repeat(2, 0.5rem); gap: 2px; }
-.pawns i { width: 0.5rem; height: 0.5rem; border-radius: 2px; }
-.pawns i:nth-child(1) { background: var(--blue); } .pawns i:nth-child(2) { background: var(--yellow); }
-.pawns i:nth-child(3) { background: var(--red); } .pawns i:nth-child(4) { background: var(--green); }
+.mono-mark { display: inline-grid; place-items: center; width: 2rem; height: 2rem; border-radius: 0.6rem; background: var(--fg); color: var(--ink); font: 700 0.75rem var(--display); letter-spacing: -0.02em; position: relative; overflow: hidden; }
+.mono-mark::after { content: ''; position: absolute; inset: auto 0 0; height: 3px; background: linear-gradient(90deg, var(--blue) 25%, var(--yellow) 25% 50%, var(--red) 50% 75%, var(--green) 75%); }
 .nav ul { display: flex; gap: 0.25rem; list-style: none; padding: 0; margin: 0; }
 .nav ul a { display: block; padding: 0.45rem 0.8rem; border-radius: 999px; text-decoration: none; font-size: 0.9375rem; color: var(--muted); transition: color 0.2s, background 0.2s; }
 .nav ul a:hover { color: var(--fg); background: var(--bg-3); }
@@ -190,6 +188,20 @@ pre.json { background: #090b14; border: 1px solid var(--line); border-radius: 0.
 .note p { color: var(--muted); font-size: 0.9375rem; }
 .note time { margin-top: auto; font: 0.75rem var(--mono); color: var(--muted); }
 
+/* Principles, about, toolbox */
+.principle { min-height: 0; }
+.principle .from { font: 500 0.75rem var(--mono); color: var(--c); }
+.principle a { margin-top: auto; color: var(--fg); font-weight: 600; font-size: 0.9375rem; text-decoration: none; }
+.principle a:hover { color: var(--c); }
+.about { display: grid; gap: 2rem; }
+@media (min-width: 60rem) { .about { grid-template-columns: 1fr 1.25fr; gap: 4rem; } .about > div:first-child { position: sticky; top: 7rem; align-self: start; } }
+.about-body p { font-size: 1.125rem; color: #d9d8e4; }
+.about-body p + p { margin-top: 1.1rem; }
+.toolbox { display: grid; gap: 1.4rem; margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--line); }
+.toolbox h3 { font: 500 0.75rem var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.toolbox .chips { margin-top: 0.7rem; }
+.toolbox .chips li { color: var(--fg); background: var(--bg-2); }
+
 /* Now + changelog */
 .now { display: grid; gap: 1rem; margin-top: 3rem; }
 @media (min-width: 60rem) { .now { grid-template-columns: 1fr 1fr; } }
@@ -254,3 +266,4 @@ pre.json { background: #090b14; border: 1px solid var(--line); border-radius: 0.
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
   html { scroll-behavior: auto; }
 }
+[id] { scroll-margin-top: 5rem; }

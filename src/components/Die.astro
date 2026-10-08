@@ -1,12 +1,12 @@
 ---
 // A Ludo die. Every face is a true fact; rolling picks one.
 const facts = [
-  { k: '0 ads', t: 'No ads, no coin shop and no pay-to-win in my Ludo. That was the reason to build it.', c: 'var(--red)' },
-  { k: '51 / 51', t: 'Tests passing in the Ludo + Jutpatti repo, including a statistical fairness test of the shuffle.', c: 'var(--green)' },
-  { k: '1 dependency', t: 'The whole multiplayer server runs on Node and the ws package. Nothing else.', c: 'var(--blue)' },
-  { k: '43.74%', t: 'My best classical model on CIFAR-10 (Random Forest after PCA). Chance is 10%.', c: 'var(--yellow)' },
-  { k: '2028', t: 'When I finish my BSc CSIT at Tribhuvan University. 4th semester right now.', c: 'var(--blue)' },
-  { k: 'crypto.randomInt', t: 'What shuffles every Jutpatti deck. No seeds, no Math.random.', c: 'var(--green)' },
+  { k: '4th sem', t: 'BSc CSIT at Tribhuvan University, graduating 2028. Learning by shipping things.', c: 'var(--yellow)' },
+  { k: '43.74%', t: 'My best classical model on CIFAR-10 (Random Forest after PCA). Chance is 10%.', c: 'var(--green)' },
+  { k: 'Offline-first', t: 'Money Tracker keeps every transaction on the phone in SQLite. No account, no sync.', c: 'var(--blue)' },
+  { k: '51 / 51', t: 'Tests passing in my multiplayer games repo, including a statistical fairness test.', c: 'var(--red)' },
+  { k: 'Python + TS', t: 'Python for data and models, TypeScript for everything that ships to a browser.', c: 'var(--yellow)' },
+  { k: 'Nepal', t: 'Where I live, study and build. Kathmandu time, GitHub any time.', c: 'var(--green)' },
 ];
 const pips: Record<number, number[]> = { 1: [5], 2: [3, 7], 3: [3, 5, 7], 4: [1, 3, 7, 9], 5: [1, 3, 5, 7, 9], 6: [1, 3, 4, 6, 7, 9] };
 const pos = (i: number) => `grid-area:${Math.ceil(i / 3)}/${((i - 1) % 3) + 1}`;

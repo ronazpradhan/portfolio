@@ -3,7 +3,6 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Die from '../components/Die.astro';
 import Hand from '../components/Hand.astro';
-import TrustDemo from '../components/TrustDemo.astro';
 import { site } from '../site';
 import { log, questions } from '../data';
 
@@ -18,6 +17,23 @@ const cifar = [
   { name: 'Gaussian Naive Bayes', acc: 31.22, f1: '0.31', c: 'var(--yellow)' },
   { name: 'Decision Tree', acc: 25.62, f1: '0.25', c: 'var(--red)' },
   { name: 'CNN · teammate’s model', acc: 85.4, f1: '0.85', c: 'var(--muted)', them: true },
+];
+const principles = [
+  { from: 'Money Tracker', title: 'Keep data where it belongs.', c: 'var(--blue)',
+    text: 'Personal finances stay on the phone, in SQLite. No account, no sync server, and it works with no signal at all.',
+    href: 'https://github.com/ronazpradhan/money-tracker-web', link: 'See the app' },
+  { from: 'CIFAR-10', title: 'Measure a baseline before believing a model.', c: 'var(--green)',
+    text: 'Four classical models first. Without the 43.74% floor, the CNN’s 85.40% is just a number with nothing to compare it to.',
+    href: '/work/cifar-10', link: 'Read the write-up' },
+  { from: 'Jutpatti', title: 'Never send the client a secret.', c: 'var(--red)',
+    text: 'The server holds the deck and every hand. Each browser only gets its own cards, so there is nothing to read in DevTools.',
+    href: '/work/jutpatti#demo', link: 'Try the interactive demo' },
+];
+const toolbox = [
+  { name: 'Web', items: ['TypeScript', 'JavaScript', 'React', 'Astro', 'Node.js', 'WebSockets', 'Tailwind CSS'] },
+  { name: 'Data & ML', items: ['Python', 'scikit-learn', 'TensorFlow / Keras', 'PCA', 'Google Colab', 'Kaggle'] },
+  { name: 'Mobile & data', items: ['React Native', 'Expo', 'SQLite', 'PostgreSQL', 'Neon'] },
+  { name: 'Also', items: ['C', 'C++', 'Java', 'Git', 'Figma'] },
 ];
 const github = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5Z"/></svg>`;
 
@@ -38,14 +54,14 @@ const jsonld = {
         <span class="eyebrow" data-reveal>BSc CSIT · Tribhuvan University · Nepal</span>
         <h1 data-reveal style="--d:60ms"><span>Ronaz</span><span class="accent">Pradhan.</span></h1>
         <p class="tagline" data-reveal style="--d:120ms">
-          I build <strong>web products</strong> and <strong>intelligent systems</strong>, mostly multiplayer games right now, with machine learning next.
+          I build <strong>web products</strong> and <strong>intelligent systems</strong>: real-time apps, offline-first mobile tools, and machine-learning experiments I can measure.
         </p>
         <div class="ctas" data-reveal style="--d:180ms">
           <a class="btn primary" href="#work">See the work →</a>
           <a class="btn" href={site.github}><Fragment set:html={github} />GitHub</a>
         </div>
         <ul class="chips" data-reveal style="--d:240ms" aria-label="Tools I use">
-          <li>TypeScript</li><li>Node.js</li><li>WebSockets</li><li>Python</li><li>scikit-learn</li><li>React Native</li>
+          <li>TypeScript</li><li>React</li><li>Node.js</li><li>Python</li><li>scikit-learn</li><li>TensorFlow</li>
         </ul>
       </div>
       <Die />
@@ -61,25 +77,13 @@ const jsonld = {
     </div>
   </section>
 
-  <section class="section" id="how" style="background:linear-gradient(var(--bg), var(--bg-2) 40%, var(--bg))">
-    <div class="wrap">
-      <span class="eyebrow" style="--c:var(--blue)" data-reveal>How I think about it</span>
-      <h2 class="h2" data-reveal>Where does the deck live?</h2>
-      <p class="intro" data-reveal>
-        The biggest design call in Jutpatti. Ludo trusts the browser, because every pawn is visible anyway. A card game can't.
-        Flip between the two designs and watch what the network sends.
-      </p>
-      <div class="seg" role="group" aria-label="Choose an architecture" data-reveal>
-        <button type="button" data-set-mode="server" aria-pressed="true">Server holds the deck (what I built)</button>
-        <button type="button" data-set-mode="naive" aria-pressed="false">Browser holds the deck</button>
-      </div>
-      <TrustDemo />
-    </div>
-  </section>
+  
+
+  
 
   <section class="section" id="ml">
     <div class="wrap">
-      <span class="eyebrow" style="--c:var(--green)" data-reveal>Machine learning</span>
+      <span class="eyebrow" style="--c:var(--green)" data-reveal>Machine learning · where I'm heading</span>
       <h2 class="h2" data-reveal>How far do classical models get on raw pixels?</h2>
       <div class="ml">
         <div data-reveal>
@@ -103,6 +107,46 @@ const jsonld = {
             </li>
           ))}
         </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="how" style="background:linear-gradient(var(--bg), var(--bg-2) 45%, var(--bg))">
+    <div class="wrap">
+      <span class="eyebrow" style="--c:var(--blue)" data-reveal>How I build</span>
+      <h2 class="h2" data-reveal>Three rules I keep relearning.</h2>
+      <p class="intro" data-reveal>Each one came out of a different project, usually after doing it the other way first.</p>
+      <div class="notes">
+        {principles.map((x, i) => (
+          <article class="note principle" style={`--c:${x.c};--d:${i * 90}ms`} data-reveal>
+            <span class="from">{x.from}</span>
+            <h3>{x.title}</h3>
+            <p>{x.text}</p>
+            <a href={x.href}>{x.link} →</a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="about" style="padding-top:2rem">
+    <div class="wrap about">
+      <div data-reveal>
+        <span class="eyebrow" style="--c:var(--red)">About</span>
+        <h2 class="h2">Web developer, heading into data.</h2>
+      </div>
+      <div class="about-body" data-reveal style="--d:100ms">
+        <p>I'm in my 4th semester of BSc CSIT at Tribhuvan University, graduating in 2028.</p>
+        <p>I started on the web side and learned by shipping: an offline-first finance app, real-time multiplayer games, a few smaller tools. That taught me to care about the unglamorous parts, like reconnects, data that shouldn't leave the device, and tests that prove a claim.</p>
+        <p>Now I'm moving toward data science and machine learning. So far that's classical models, PCA and careful evaluation. Next is better features, and putting a trained model inside a product without making it worse to use.</p>
+        <div class="toolbox">
+          {toolbox.map((g) => (
+            <div>
+              <h3>{g.name}</h3>
+              <ul class="chips">{g.items.map((t) => <li>{t}</li>)}</ul>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   </section>
@@ -152,8 +196,8 @@ const jsonld = {
     <div class="wrap">
       <div class="contact" data-reveal>
         <span class="eyebrow">Contact</span>
-        <h2>Internship, project, or a game of Jutpatti?</h2>
-        <p>I'm looking for chances to work on web products and data science / ML. The fastest way to reach me is GitHub.</p>
+        <h2>Have a problem worth building for?</h2>
+        <p>I'm open to internships and collaborations in web development, data science and machine learning. The fastest way to reach me is GitHub.</p>
         <div class="ctas">
           {site.email && <a class="btn primary" href={`mailto:${site.email}`}>Email me</a>}
           <a class={`btn ${site.email ? '' : 'primary'}`} href={site.github}><Fragment set:html={github} />github.com/ronazpradhan</a>
