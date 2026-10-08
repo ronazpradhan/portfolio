@@ -19,33 +19,37 @@ const cards = [
 ];
 const bars = [43.74, 36.25, 31.22, 25.62, 85.4];
 ---
-<div class="table" data-reveal>
-  <ul class="hand">
-    {cards.map((c) => (
-      <li>
-        <a class={`card ${c.red ? 'suit-r' : 'suit-b'}`} href={c.href}>
-          <span class="corner tl" aria-hidden="true">{c.rank}<span>{c.suit}</span></span>
-          <span class="corner br" aria-hidden="true">{c.rank}<span>{c.suit}</span></span>
-          <div class="art">
-            {c.img ? (
-              <Image src={c.img} alt={c.alt} widths={[300, 600]} sizes="17.5rem" loading="lazy" />
-            ) : c.title === 'CIFAR-10' ? (
-              <svg viewBox="0 0 200 150" role="img" aria-label="Bar chart of CIFAR-10 accuracies">
-                {bars.map((b, i) => <rect x={22 + i * 34} y={130 - b * 1.3} width="22" height={b * 1.3} rx="4" fill={i === 4 ? '#1c1b22' : '#d6293a'} opacity={i === 4 ? 0.25 : 1 - i * 0.15} />)}
-                <line x1="14" y1="130.5" x2="186" y2="130.5" stroke="#1c1b22" stroke-opacity=".3" />
-              </svg>
-            ) : (
-              <span style="font:700 4.5rem/1 var(--display);color:#1c1b22" aria-hidden="true">रू</span>
-            )}
-          </div>
-          <div class="body">
-            <h3>{c.title}</h3>
-            <p>{c.text}</p>
-            <span class="tags">{c.tags}</span>
-            <span class="go">{c.href.startsWith('http') ? 'Public page ↗' : 'Read the case study →'}</span>
-          </div>
-        </a>
-      </li>
+<div class="marquee" data-reveal>
+  <div class="mq-track">
+    {[0, 1].map((copy) => (
+      <ul class="hand" aria-hidden={copy ? 'true' : undefined}>
+        {cards.map((c, i) => (
+          <li style={`--tilt:${i % 2 ? 2 : -2}deg`}>
+            <a class={`card ${c.red ? 'suit-r' : 'suit-b'}`} href={c.href} tabindex={copy ? -1 : undefined}>
+              <span class="corner tl" aria-hidden="true">{c.rank}<span>{c.suit}</span></span>
+              <span class="corner br" aria-hidden="true">{c.rank}<span>{c.suit}</span></span>
+              <div class="art">
+                {c.img ? (
+                  <Image src={c.img} alt={copy ? '' : c.alt} widths={[300, 600]} sizes="18rem" loading="lazy" />
+                ) : c.title === 'CIFAR-10' ? (
+                  <svg viewBox="0 0 200 150" role="img" aria-label="Bar chart of CIFAR-10 accuracies">
+                    {bars.map((b, i) => <rect x={22 + i * 34} y={130 - b * 1.3} width="22" height={b * 1.3} rx="4" fill={i === 4 ? '#1c1b22' : '#d6293a'} opacity={i === 4 ? 0.25 : 1 - i * 0.15} />)}
+                    <line x1="14" y1="130.5" x2="186" y2="130.5" stroke="#1c1b22" stroke-opacity=".3" />
+                  </svg>
+                ) : (
+                  <span style="font:700 4.5rem/1 var(--display);color:#1c1b22" aria-hidden="true">रू</span>
+                )}
+              </div>
+              <div class="body">
+                <h3>{c.title}</h3>
+                <p>{c.text}</p>
+                <span class="tags">{c.tags}</span>
+                <span class="go">{c.href.startsWith('http') ? 'Public page ↗' : 'Read the case study →'}</span>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
     ))}
-  </ul>
+  </div>
 </div>

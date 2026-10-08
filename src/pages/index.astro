@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import Die from '../components/Die.astro';
 import Hand from '../components/Hand.astro';
 import { site } from '../site';
 import { log, questions } from '../data';
@@ -51,7 +50,6 @@ const jsonld = {
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
-        <span class="eyebrow" data-reveal>BSc CSIT · Tribhuvan University · Nepal</span>
         <h1 data-reveal style="--d:60ms"><span>Ronaz</span><span class="accent">Pradhan.</span></h1>
         <p class="tagline" data-reveal style="--d:120ms">
           I build <strong>web products</strong> and <strong>intelligent systems</strong>: real-time apps, offline-first mobile tools, and machine-learning experiments I can measure.
@@ -60,21 +58,17 @@ const jsonld = {
           <a class="btn primary" href="#work">See the work →</a>
           <a class="btn" href={site.github}><Fragment set:html={github} />GitHub</a>
         </div>
-        <ul class="chips" data-reveal style="--d:240ms" aria-label="Tools I use">
-          <li>TypeScript</li><li>React</li><li>Node.js</li><li>Python</li><li>scikit-learn</li><li>TensorFlow</li>
-        </ul>
       </div>
-      <Die />
     </div>
   </section>
 
   <section class="section" id="work" style="padding-top:2rem">
     <div class="wrap">
       <span class="eyebrow" style="--c:var(--red)" data-reveal>Selected work</span>
-      <h2 class="h2" data-reveal>Four projects, dealt face up.</h2>
-      <p class="intro" data-reveal>Each one has a write-up of the problem, the constraints, the decisions, and what I'd change next time.</p>
-      <Hand />
+      <h2 class="h2" data-reveal>Things I've built.</h2>
+      <p class="intro" data-reveal>Each one has a write-up of the problem, the constraints, the decisions, and what I'd change next time. Hover to pause.</p>
     </div>
+    <Hand />
   </section>
 
   
