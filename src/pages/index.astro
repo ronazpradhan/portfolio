@@ -2,6 +2,9 @@
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Projects from '../components/Projects.astro';
+import { Image } from 'astro:assets';
+import ludoShot from '../assets/ludo.png';
+import jutShot from '../assets/jutpatti.png';
 import { site } from '../site';
 
 const notes = (await getCollection('notes')).sort((a, b) => +b.data.date - +a.data.date);
@@ -45,7 +48,8 @@ const jsonld = {
 ---
 <Base jsonld={jsonld}>
   <section class="hero">
-    <div class="wrap">
+    <div class="wrap hero-grid">
+      <div>
       <h1 aria-label="Ronaz Pradhan.">
         <span aria-hidden="true">{[...'Ronaz'].map((ch, i) => <span class="ch" style={`--i:${i}`}>{ch}</span>)}</span>
         <span class="accent" aria-hidden="true">{[...'Pradhan.'].map((ch, i) => <span class="ch" style={`--i:${i + 5};--cc:${grad[i]}`}>{ch}</span>)}</span>
@@ -57,10 +61,15 @@ const jsonld = {
           <a class="btn" href={site.github}><Fragment set:html={github} />GitHub</a>
         </div>
       </div>
+      </div>
+      <div class="phones" aria-hidden="true">
+        <a href="/work/ludo" tabindex="-1" class="phone p1"><Image src={ludoShot} alt="" widths={[260, 520]} sizes="15rem" loading="eager" /></a>
+        <a href="/work/jutpatti" tabindex="-1" class="phone p2"><Image src={jutShot} alt="" widths={[260, 520]} sizes="15rem" loading="eager" /></a>
+      </div>
     </div>
   </section>
 
-  <section class="section" id="work" style="padding-top:1rem">
+  <section class="section" id="work" style="padding-top:0.5rem">
     <div class="wrap">
       <div class="work-head" data-reveal><h2>Selected work</h2></div>
     </div>
@@ -103,9 +112,9 @@ const jsonld = {
     </div>
   </section>
 
-  <section class="section" id="about" style="padding-top:2rem">
+  <section class="section" id="about" style="padding-top:0">
     <div class="wrap about">
-      <h2 class="h2" data-reveal>Web developer, heading into data.</h2>
+      <h2 class="h2" data-reveal style="margin-top:0">Web developer, heading into data.</h2>
       <div class="about-body" data-reveal style="--d:100ms">
         <p>BSc CSIT, Tribhuvan University, 2028. I ship web and mobile products and I'm moving into data science and ML.</p>
         <div class="toolbox">
@@ -120,7 +129,7 @@ const jsonld = {
     </div>
   </section>
 
-  <section class="section" id="notes" style="padding-top:2rem">
+  <section class="section" id="notes" style="padding-top:0">
     <div class="wrap">
       <h2 class="h2" data-reveal>Notes.</h2>
       <div class="notes">
@@ -134,7 +143,7 @@ const jsonld = {
     </div>
   </section>
 
-  <section class="section" id="contact" style="padding-top:2rem">
+  <section class="section" id="contact" style="padding-top:0">
     <div class="wrap">
       <div class="contact" data-reveal>
         <h2>Let&rsquo;s build something.</h2>
