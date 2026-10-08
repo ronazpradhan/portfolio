@@ -7,17 +7,17 @@ import jutpatti from '../assets/jutpatti.png';
 const projects = [
   { title: 'Jutpatti', kind: 'Multiplayer web game', href: '/work/jutpatti', img: jutpatti, c: 'var(--red)',
     alt: 'Jutpatti table on a phone showing my seven cards and only a card count for the opponent',
-    text: 'The Nepali card game, online. A server-authoritative engine that deals with crypto.randomInt and never leaks a hand.',
+    text: 'Nepali card game, online. The server deals; no hand ever leaks.',
     tags: ['Node.js', 'WebSockets', '51 tests'] },
   { title: 'CIFAR-10 study', kind: 'Machine learning', href: '/work/cifar-10', c: 'var(--green)',
-    text: 'Classical ML against a CNN on 60,000 images. I built the PCA pipeline and four classical models; best was 43.74%.',
+    text: 'PCA + four classical models vs a CNN. Best: 43.74%.',
     tags: ['Python', 'scikit-learn', 'PCA'] },
   { title: 'Money Tracker', kind: 'Android app', href: 'https://github.com/ronazpradhan/money-tracker-web', c: 'var(--blue)',
-    text: 'Offline-first finance tracker. Every transaction stays on the phone in SQLite. No account, no sync server.',
+    text: 'Offline-first expenses. Data never leaves the phone.',
     tags: ['React Native', 'Expo', 'SQLite'] },
   { title: 'Ludo', kind: 'Multiplayer web game', href: '/work/ludo', img: ludo, c: 'var(--yellow)',
     alt: 'Ludo board on a phone, one player against three computer players',
-    text: 'Ludo with friends over a room code. No ads, no coin shop. Rejoins after a dropped connection; bots cover idle players.',
+    text: 'Play with friends by room code. No ads, no coin shop.',
     tags: ['Node.js', 'WebSockets', 'Vanilla JS'] },
 ];
 const bars = [43.74, 36.25, 31.22, 25.62, 85.4];
@@ -45,7 +45,7 @@ const bars = [43.74, 36.25, 31.22, 25.62, 85.4];
                 <h3>{p.title}</h3>
                 <p>{p.text}</p>
                 <ul class="ptags">{p.tags.map((t) => <li>{t}</li>)}</ul>
-                <span class="go">{p.href.startsWith('http') ? 'Public page ↗' : 'Case study →'}</span>
+                <span class="go">{p.href.startsWith('http') ? 'View ↗' : 'Case study →'}</span>
               </div>
             </a>
           </li>

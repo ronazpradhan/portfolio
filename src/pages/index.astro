@@ -18,14 +18,11 @@ const cifar = [
 ];
 const principles = [
   { from: 'Money Tracker', title: 'Keep data where it belongs.', c: 'var(--blue)',
-    text: 'Personal finances stay on the phone, in SQLite. No account, no sync server, and it works with no signal at all.',
-    href: 'https://github.com/ronazpradhan/money-tracker-web', link: 'See the app' },
+    href: 'https://github.com/ronazpradhan/money-tracker-web', link: 'Money Tracker' },
   { from: 'CIFAR-10', title: 'Measure a baseline before believing a model.', c: 'var(--green)',
-    text: 'Four classical models first. Without the 43.74% floor, the CNN’s 85.40% is just a number with nothing to compare it to.',
-    href: '/work/cifar-10', link: 'Read the write-up' },
+    href: '/work/cifar-10', link: 'Case study' },
   { from: 'Jutpatti', title: 'Never send the client a secret.', c: 'var(--red)',
-    text: 'The server holds the deck and every hand. Each browser only gets its own cards, so there is nothing to read in DevTools.',
-    href: '/work/jutpatti#demo', link: 'Try the interactive demo' },
+    href: '/work/jutpatti#demo', link: 'Interactive demo' },
 ];
 const toolbox = [
   { name: 'Web', items: ['TypeScript', 'JavaScript', 'React', 'Astro', 'Node.js', 'WebSockets', 'Tailwind CSS'] },
@@ -48,21 +45,16 @@ const jsonld = {
 ---
 <Base jsonld={jsonld}>
   <section class="hero">
-    <div class="wrap hero-grid">
-      <div>
-        <p class="status"><i aria-hidden="true"></i>Open to internships in web & ML</p>
-        <h1 aria-label="Ronaz Pradhan.">
-          <span aria-hidden="true">{[...'Ronaz'].map((ch, i) => <span class="ch" style={`--i:${i}`}>{ch}</span>)}</span>
-          <span class="accent" aria-hidden="true">{[...'Pradhan.'].map((ch, i) => <span class="ch" style={`--i:${i + 5};--cc:${grad[i]}`}>{ch}</span>)}</span>
-        </h1>
-        <div class="hero-row">
-        <p class="tagline" data-reveal style="--d:120ms">
-          I build <strong>web products</strong> and <strong>intelligent systems</strong>: real-time apps, offline-first mobile tools, and machine-learning experiments I can measure.
-        </p>
+    <div class="wrap">
+      <h1 aria-label="Ronaz Pradhan.">
+        <span aria-hidden="true">{[...'Ronaz'].map((ch, i) => <span class="ch" style={`--i:${i}`}>{ch}</span>)}</span>
+        <span class="accent" aria-hidden="true">{[...'Pradhan.'].map((ch, i) => <span class="ch" style={`--i:${i + 5};--cc:${grad[i]}`}>{ch}</span>)}</span>
+      </h1>
+      <div class="hero-row">
+        <p class="tagline" data-reveal style="--d:120ms"><strong>Web products</strong> and <strong>intelligent systems</strong>.</p>
         <div class="ctas" data-reveal style="--d:180ms">
           <a class="btn primary" href="#work">See the work →</a>
           <a class="btn" href={site.github}><Fragment set:html={github} />GitHub</a>
-        </div>
         </div>
       </div>
     </div>
@@ -70,41 +62,25 @@ const jsonld = {
 
   <section class="section" id="work" style="padding-top:1rem">
     <div class="wrap">
-      <div class="work-head" data-reveal>
-        <h2>Selected work</h2>
-        <span class="mq-hint">drag or swipe →</span>
-      </div>
-      </div>
+      <div class="work-head" data-reveal><h2>Selected work</h2></div>
+    </div>
     <Projects />
   </section>
 
-  
-
-  
-
   <section class="section" id="ml">
     <div class="wrap">
-      <span class="eyebrow" style="--c:var(--green)" data-reveal>Machine learning · where I'm heading</span>
-      <h2 class="h2" data-reveal>How far do classical models get on raw pixels?</h2>
+      <h2 class="h2" data-reveal>Classical ML vs CNN on CIFAR-10.</h2>
       <div class="ml">
         <div data-reveal>
           <div class="stat">43.74%</div>
-          <p class="intro">
-            My best result on CIFAR-10: a Random Forest on PCA-reduced pixels, in a two-person course project
-            for CSC 266. Chance is 10%. My teammate Aakriti Maharjan's CNN reached 85.40%.
-          </p>
-          <p class="intro">
-            The gap isn't really the models. Flattening an image throws away which pixels are neighbours, and
-            the CNN keeps it. Next I want to give classical models better features and see how much of the gap closes.
-          </p>
-          <p style="margin-top:1.5rem"><a class="btn" href="/work/cifar-10">Read the write-up →</a></p>
+          <p class="intro">Best classical model: Random Forest on PCA features. Chance is 10%.</p>
+          <p style="margin-top:1.75rem"><a class="btn" href="/work/cifar-10">Case study →</a></p>
         </div>
         <ul class="bars" aria-label="Test accuracy on CIFAR-10 by model" data-reveal style="--d:100ms">
           {cifar.map((r) => (
             <li class={r.them ? 'them' : undefined} style={`--c:${r.c}`}>
               <div class="row"><span>{r.name}</span><span>{r.acc.toFixed(2)}%</span></div>
               <div class="track"><div class="fill" style={`--w:${r.acc}%`}></div></div>
-              <span class="meta">macro F1 {r.f1}</span>
             </li>
           ))}
         </ul>
@@ -114,17 +90,14 @@ const jsonld = {
 
   <section class="section" id="how" style="background:linear-gradient(var(--bg), var(--bg-2) 45%, var(--bg))">
     <div class="wrap">
-      <span class="eyebrow" style="--c:var(--blue)" data-reveal>How I build</span>
-      <h2 class="h2" data-reveal>Three rules I keep relearning.</h2>
-      <p class="intro" data-reveal>Each one came out of a different project, usually after doing it the other way first.</p>
+      <h2 class="h2" data-reveal>How I build.</h2>
       <div class="notes">
         {principles.map((x, i) => (
-          <article class="note principle" style={`--c:${x.c};--d:${i * 90}ms`} data-reveal>
+          <a class="note principle" href={x.href} style={`--c:${x.c};--d:${i * 90}ms`} data-reveal>
             <span class="from">{x.from}</span>
             <h3>{x.title}</h3>
-            <p>{x.text}</p>
-            <a href={x.href}>{x.link} →</a>
-          </article>
+            <span class="go">{x.link} →</span>
+          </a>
         ))}
       </div>
     </div>
@@ -132,14 +105,9 @@ const jsonld = {
 
   <section class="section" id="about" style="padding-top:2rem">
     <div class="wrap about">
-      <div data-reveal>
-        <span class="eyebrow" style="--c:var(--red)">About</span>
-        <h2 class="h2">Web developer, heading into data.</h2>
-      </div>
+      <h2 class="h2" data-reveal>Web developer, heading into data.</h2>
       <div class="about-body" data-reveal style="--d:100ms">
-        <p>I'm in my 4th semester of BSc CSIT at Tribhuvan University, graduating in 2028.</p>
-        <p>I started on the web side and learned by shipping: an offline-first finance app, real-time multiplayer games, a few smaller tools. That taught me to care about the unglamorous parts, like reconnects, data that shouldn't leave the device, and tests that prove a claim.</p>
-        <p>Now I'm moving toward data science and machine learning. So far that's classical models, PCA and careful evaluation. Next is better features, and putting a trained model inside a product without making it worse to use.</p>
+        <p>BSc CSIT, Tribhuvan University, 2028. I ship web and mobile products and I'm moving into data science and ML.</p>
         <div class="toolbox">
           {toolbox.map((g) => (
             <div>
@@ -154,13 +122,11 @@ const jsonld = {
 
   <section class="section" id="notes" style="padding-top:2rem">
     <div class="wrap">
-      <span class="eyebrow" style="--c:var(--yellow)" data-reveal>Build notes</span>
-      <h2 class="h2" data-reveal>Short notes on decisions.</h2>
+      <h2 class="h2" data-reveal>Notes.</h2>
       <div class="notes">
         {notes.map((n, i) => (
           <a class="note" href={`/notes/${n.id}`} style={`--c:${colors[i % 4]};--d:${i * 80}ms`} data-reveal>
             <h3>{n.data.title}</h3>
-            <p>{n.data.summary}</p>
             <time datetime={n.data.date.toISOString().slice(0, 10)}>{fmt(n.data.date)}</time>
           </a>
         ))}
@@ -168,14 +134,10 @@ const jsonld = {
     </div>
   </section>
 
-  
-
   <section class="section" id="contact" style="padding-top:2rem">
     <div class="wrap">
       <div class="contact" data-reveal>
-        <span class="eyebrow">Contact</span>
-        <h2>Have a problem worth building for?</h2>
-        <p>I'm open to internships and collaborations in web development, data science and machine learning. The fastest way to reach me is GitHub.</p>
+        <h2>Let&rsquo;s build something.</h2>
         <div class="ctas">
           {site.email && <a class="btn primary" href={`mailto:${site.email}`}>Email me</a>}
           <a class={`btn ${site.email ? '' : 'primary'}`} href={site.github}><Fragment set:html={github} />github.com/ronazpradhan</a>

@@ -52,6 +52,7 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
     <main id="main">
       <slot />
     </main>
+    <a class="to-top" href="#main" aria-label="Back to top" id="to-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></a>
     <footer class="wrap foot">
       <span>© 2026 Ronaz Pradhan · Built with Astro, no framework on the client.</span>
       <a href={`${site.github}/portfolio`}>Source on GitHub</a>
@@ -63,6 +64,9 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
         { rootMargin: '0px 0px -10% 0px' },
       );
       document.querySelectorAll('[data-reveal], .bars').forEach((el) => io.observe(el));
+      const top = document.getElementById('to-top')!;
+      addEventListener('scroll', () => top.classList.toggle('show', scrollY > 600), { passive: true });
+      top.addEventListener('click', (e) => { e.preventDefault(); scrollTo({ top: 0 }); });
     </script>
   </body>
 </html>
