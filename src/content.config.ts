@@ -3,7 +3,7 @@ import { glob } from 'astro/loaders';
 
 const work = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/work' }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     title: z.string(),
     summary: z.string(),
     kind: z.string(),
@@ -11,7 +11,9 @@ const work = defineCollection({
     role: z.string(),
     stack: z.array(z.string()),
     repo: z.string().url().optional(),
+    live: z.string().url().optional(),
     order: z.number(),
+    shots: z.array(z.object({ src: image(), alt: z.string() })).optional(),
   }),
 });
 

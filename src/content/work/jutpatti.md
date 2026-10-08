@@ -6,6 +6,8 @@ status: In progress
 role: Solo — rules engine, server, table UI
 stack: [Node.js, WebSocket (ws), vanilla JS, node:test]
 repo: https://github.com/ronazpradhan/ludo3d
+shots:
+  - { src: ../../assets/jutpatti.png, alt: "Jutpatti table on a phone: my seven cards, the opponent shown only as a name and a card count of 7" }
 order: 2
 ---
 
@@ -13,7 +15,6 @@ order: 2
 
 Jutpatti is a card game people in Nepal play at home and during festivals, and there isn't a good place to play it online. Copying [Ludo](/work/ludo)'s approach wasn't an option: a card game has hidden information, and the moment a browser holds every player's cards, anyone with dev tools can read them.
 
-![Jutpatti table on a phone: my seven cards along the bottom, the opponent shown only as a name and a card count of 7.](../../assets/jutpatti.png)
 
 ## Constraints
 

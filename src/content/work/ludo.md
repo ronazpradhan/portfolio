@@ -6,6 +6,8 @@ status: In progress
 role: Solo — design, client, server
 stack: [Node.js, WebSocket (ws), vanilla JS, HTML, CSS]
 repo: https://github.com/ronazpradhan/ludo3d
+shots:
+  - { src: ../../assets/ludo.png, alt: "Ludo board on a phone: one human player against three computer players" }
 order: 1
 ---
 
@@ -13,7 +15,6 @@ order: 1
 
 Most Ludo apps people around me play are wrapped in ads, coin shops and timers designed to sell you something. I wanted a version where you open a link, share a room code with friends, and play.
 
-![Ludo board on a phone: one human player against three computer players.](../../assets/ludo.png)
 
 ## Constraints
 

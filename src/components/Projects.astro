@@ -3,6 +3,7 @@
 import { Image } from 'astro:assets';
 import ludo from '../assets/ludo.png';
 import jutpatti from '../assets/jutpatti.png';
+import money from '../assets/money/dark.jpg';
 
 const projects = [
   { title: 'Jutpatti', kind: 'Multiplayer web game', href: '/work/jutpatti', img: jutpatti, c: 'var(--red)',
@@ -12,7 +13,8 @@ const projects = [
   { title: 'CIFAR-10 study', kind: 'Machine learning', href: '/work/cifar-10', c: 'var(--green)',
     text: 'PCA + four classical models vs a CNN. Best: 43.74%.',
     tags: ['Python', 'scikit-learn', 'PCA'] },
-  { title: 'Money Tracker', kind: 'Android app', href: 'https://github.com/ronazpradhan/money-tracker-web', c: 'var(--blue)',
+  { title: 'Money Tracker', kind: 'Android app', href: '/work/money-tracker', img: money, c: 'var(--blue)',
+    alt: 'Money Tracker home screen in the dark theme showing monthly spending against a budget',
     text: 'Offline-first expenses. Data never leaves the phone.',
     tags: ['React Native', 'Expo', 'SQLite'] },
   { title: 'Ludo', kind: 'Multiplayer web game', href: '/work/ludo', img: ludo, c: 'var(--yellow)',
@@ -45,7 +47,7 @@ const bars = [43.74, 36.25, 31.22, 25.62, 85.4];
                 <h3>{p.title}</h3>
                 <p>{p.text}</p>
                 <ul class="ptags">{p.tags.map((t) => <li>{t}</li>)}</ul>
-                <span class="go">{p.href.startsWith('http') ? 'View ↗' : 'Case study →'}</span>
+                <span class="go">Case study →</span>
               </div>
             </a>
           </li>

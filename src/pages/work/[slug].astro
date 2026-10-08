@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import TrustDemo from '../../components/TrustDemo.astro';
+import { Image } from 'astro:assets';
 
 export async function getStaticPaths() {
   const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
@@ -10,7 +11,14 @@ export async function getStaticPaths() {
 const { entry, next } = Astro.props;
 const { Content, headings } = await render(entry);
 const d = entry.data;
-const color = ['var(--red)', 'var(--yellow)', 'var(--green)', 'var(--blue)'][(d.order - 1) % 4];
+const color = ['var(--yellow)', 'var(--red)', 'var(--green)', 'var(--blue)'][(d.order - 1) % 4];
+const cifar = [
+  { name: 'Random Forest', acc: 43.74, c: 'var(--green)' },
+  { name: 'K-Nearest Neighbors', acc: 36.25, c: 'var(--blue)' },
+  { name: 'Gaussian Naive Bayes', acc: 31.22, c: 'var(--yellow)' },
+  { name: 'Decision Tree', acc: 25.62, c: 'var(--red)' },
+  { name: 'CNN · teammate’s model', acc: 85.4, c: 'var(--muted)', them: true },
+];
 ---
 <Base title={d.title} description={d.summary} type="article">
   <article style={`--c:${color}`}>
@@ -24,8 +32,30 @@ const color = ['var(--red)', 'var(--yellow)', 'var(--green)', 'var(--blue)'][(d.
         <div><dt>My role</dt><dd>{d.role}</dd></div>
         <div><dt>Stack</dt><dd>{d.stack.join(', ')}</dd></div>
         {d.repo && <div><dt>Source</dt><dd><a href={d.repo}>GitHub ↗</a></dd></div>}
+        {d.live && <div><dt>Live</dt><dd><a href={d.live}>Download page ↗</a></dd></div>}
       </dl>
     </header>
+    {d.shots && (
+      <div class={`gallery ${d.shots.length === 1 ? 'single' : ''}`} data-reveal>
+        {d.shots.map((s, i) => (
+          <figure class="shot">
+            <Image src={s.src} alt={s.alt} widths={[300, 600]} sizes="17rem" loading={i < 3 ? 'eager' : 'lazy'} />
+          </figure>
+        ))}
+      </div>
+    )}
+    {entry.id === 'cifar-10' && (
+      <div class="wrap" style="padding-top:2.5rem">
+        <ul class="bars in" aria-label="Test accuracy on CIFAR-10 by model" style="max-width:44rem">
+          {cifar.map((r) => (
+            <li class={r.them ? 'them' : undefined} style={`--c:${r.c}`}>
+              <div class="row"><span>{r.name}</span><span>{r.acc.toFixed(2)}%</span></div>
+              <div class="track"><div class="fill" style={`--w:${r.acc}%`}></div></div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
     {entry.id === 'jutpatti' && (
       <section class="wrap" id="demo" style="padding-block:3.5rem 1rem">
         <span class="eyebrow" style="--c:var(--red)">Interactive</span>

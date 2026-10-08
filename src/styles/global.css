@@ -266,6 +266,12 @@ pre.json { background: #090b14; border: 1px solid var(--line); border-radius: 0.
 .prose blockquote { border-left: 3px solid var(--yellow); padding-left: 1.1rem; color: var(--muted); }
 .next { margin-top: 4rem; }
 
+/* Case-study screenshot gallery: a horizontal strip of phones. */
+.gallery { display: flex; gap: 1.25rem; overflow-x: auto; scroll-snap-type: x mandatory; padding: 2.5rem var(--pad) 1rem; max-width: var(--max); margin: 0 auto; scrollbar-width: thin; }
+.gallery.single { justify-content: center; }
+.shot { flex: none; width: min(62vw, 16rem); scroll-snap-align: start; margin: 0; }
+.shot img { width: 100%; height: auto; border-radius: 1.4rem; border: 5px solid #1d2140; box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.9); }
+
 /* Reveal on scroll. Without JS (no .js class) nothing is hidden. */
 @media (prefers-reduced-motion: no-preference) {
   .js [data-reveal] { opacity: 0; transform: translateY(1.5rem); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); transition-delay: var(--d, 0ms); }
