@@ -1,0 +1,92 @@
+---
+// Project carousel: drifts on its own, and you can drag, swipe or trackpad-scroll it.
+import { Image } from 'astro:assets';
+import ludo from '../assets/ludo.png';
+import jutpatti from '../assets/jutpatti.png';
+
+const projects = [
+  { title: 'Jutpatti', kind: 'Multiplayer web game', href: '/work/jutpatti', img: jutpatti, c: 'var(--red)',
+    alt: 'Jutpatti table on a phone showing my seven cards and only a card count for the opponent',
+    text: 'The Nepali card game, online. A server-authoritative engine that deals with crypto.randomInt and never leaks a hand.',
+    tags: ['Node.js', 'WebSockets', '51 tests'] },
+  { title: 'CIFAR-10 study', kind: 'Machine learning', href: '/work/cifar-10', c: 'var(--green)',
+    text: 'Classical ML against a CNN on 60,000 images. I built the PCA pipeline and four classical models; best was 43.74%.',
+    tags: ['Python', 'scikit-learn', 'PCA'] },
+  { title: 'Money Tracker', kind: 'Android app', href: 'https://github.com/ronazpradhan/money-tracker-web', c: 'var(--blue)',
+    text: 'Offline-first finance tracker. Every transaction stays on the phone in SQLite. No account, no sync server.',
+    tags: ['React Native', 'Expo', 'SQLite'] },
+  { title: 'Ludo', kind: 'Multiplayer web game', href: '/work/ludo', img: ludo, c: 'var(--yellow)',
+    alt: 'Ludo board on a phone, one player against three computer players',
+    text: 'Ludo with friends over a room code. No ads, no coin shop. Rejoins after a dropped connection; bots cover idle players.',
+    tags: ['Node.js', 'WebSockets', 'Vanilla JS'] },
+];
+const bars = [43.74, 36.25, 31.22, 25.62, 85.4];
+---
+<div class="marquee" id="marquee" data-reveal aria-label="Projects" role="region" tabindex="0">
+  <div class="mq-track">
+    {[0, 1].map((copy) => (
+      <ul class="projects" aria-hidden={copy ? 'true' : undefined}>
+        {projects.map((p) => (
+          <li>
+            <a class="pcard" href={p.href} tabindex={copy ? -1 : undefined} style={`--c:${p.c}`} draggable="false">
+              <div class="art">
+                {p.img ? (
+                  <Image src={p.img} alt={copy ? '' : p.alt} widths={[340, 680]} sizes="21rem" loading="lazy" draggable="false" />
+                ) : p.title.startsWith('CIFAR') ? (
+                  <svg viewBox="0 0 200 120" role="img" aria-label="CIFAR-10 accuracy by model">
+                    {bars.map((b, i) => <rect x={24 + i * 32} y={108 - b * 1.1} width="20" height={b * 1.1} rx="4" fill={i === 4 ? 'rgb(255 255 255 / .18)' : '#2fd67b'} opacity={i === 4 ? 1 : 1 - i * 0.18} />)}
+                  </svg>
+                ) : (
+                  <span class="glyph" aria-hidden="true">रू</span>
+                )}
+              </div>
+              <div class="body">
+                <span class="kind">{p.kind}</span>
+                <h3>{p.title}</h3>
+                <p>{p.text}</p>
+                <ul class="ptags">{p.tags.map((t) => <li>{t}</li>)}</ul>
+                <span class="go">{p.href.startsWith('http') ? 'Public page ↗' : 'Case study →'}</span>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    ))}
+  </div>
+</div>
+<script>
+  const el = document.getElementById('marquee')!;
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let pos = 0, hover = false, dragging = false, moved = 0, startX = 0, startPos = 0, resumeAt = 0;
+  const wrap = () => {
+    const half = el.scrollWidth / 2;
+    if (el.scrollLeft >= half) el.scrollLeft -= half;
+    else if (el.scrollLeft <= 0) el.scrollLeft += half;
+    pos = el.scrollLeft;
+  };
+  const tick = () => {
+    if (!hover && !dragging && performance.now() > resumeAt) { pos += 0.5; el.scrollLeft = pos; }
+    wrap();
+    requestAnimationFrame(tick);
+  };
+  if (!still) requestAnimationFrame(tick);
+  // Any scroll we didn't cause (trackpad, swipe, keyboard) takes over for a moment.
+  el.addEventListener('scroll', () => { if (Math.abs(el.scrollLeft - pos) > 2) { pos = el.scrollLeft; resumeAt = performance.now() + 1500; } }, { passive: true });
+  el.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') hover = true; });
+  el.addEventListener('pointerleave', () => { hover = false; dragging = false; el.classList.remove('dragging'); });
+  el.addEventListener('touchstart', () => (resumeAt = performance.now() + 3000), { passive: true });
+  // Mouse drag. Touch and trackpads already scroll natively.
+  el.addEventListener('pointerdown', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    dragging = true; moved = 0; startX = e.clientX; startPos = el.scrollLeft;
+  });
+  el.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    moved = Math.max(moved, Math.abs(e.clientX - startX));
+    if (moved > 4) el.classList.add('dragging');
+    el.scrollLeft = startPos - (e.clientX - startX);
+    pos = el.scrollLeft;
+  });
+  addEventListener('pointerup', () => { dragging = false; el.classList.remove('dragging'); });
+  el.addEventListener('click', (e) => { if (moved > 4) { e.preventDefault(); moved = 0; } }, true);
+</script>

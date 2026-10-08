@@ -1,9 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import Hand from '../components/Hand.astro';
+import Projects from '../components/Projects.astro';
 import { site } from '../site';
-import { log, questions } from '../data';
 
 const notes = (await getCollection('notes')).sort((a, b) => +b.data.date - +a.data.date);
 const colors = ['var(--yellow)', 'var(--blue)', 'var(--red)', 'var(--green)'];
@@ -34,6 +33,7 @@ const toolbox = [
   { name: 'Mobile & data', items: ['React Native', 'Expo', 'SQLite', 'PostgreSQL', 'Neon'] },
   { name: 'Also', items: ['C', 'C++', 'Java', 'Git', 'Figma'] },
 ];
+const grad = ['#ffc83d', '#ffb340', '#ff9a45', '#ff814c', '#ff6a55', '#ff5a5f', '#f25a7a', '#4d8dff'];
 const github = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5Z"/></svg>`;
 
 const jsonld = {
@@ -50,7 +50,12 @@ const jsonld = {
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
-        <h1 data-reveal style="--d:60ms"><span>Ronaz</span><span class="accent">Pradhan.</span></h1>
+        <p class="status"><i aria-hidden="true"></i>Open to internships in web & ML</p>
+        <h1 aria-label="Ronaz Pradhan.">
+          <span aria-hidden="true">{[...'Ronaz'].map((ch, i) => <span class="ch" style={`--i:${i}`}>{ch}</span>)}</span>
+          <span class="accent" aria-hidden="true">{[...'Pradhan.'].map((ch, i) => <span class="ch" style={`--i:${i + 5};--cc:${grad[i]}`}>{ch}</span>)}</span>
+        </h1>
+        <div class="hero-row">
         <p class="tagline" data-reveal style="--d:120ms">
           I build <strong>web products</strong> and <strong>intelligent systems</strong>: real-time apps, offline-first mobile tools, and machine-learning experiments I can measure.
         </p>
@@ -58,17 +63,19 @@ const jsonld = {
           <a class="btn primary" href="#work">See the work →</a>
           <a class="btn" href={site.github}><Fragment set:html={github} />GitHub</a>
         </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="section" id="work" style="padding-top:2rem">
+  <section class="section" id="work" style="padding-top:1rem">
     <div class="wrap">
-      <span class="eyebrow" style="--c:var(--red)" data-reveal>Selected work</span>
-      <h2 class="h2" data-reveal>Things I've built.</h2>
-      <p class="intro" data-reveal>Each one has a write-up of the problem, the constraints, the decisions, and what I'd change next time. Hover to pause.</p>
-    </div>
-    <Hand />
+      <div class="work-head" data-reveal>
+        <h2>Selected work</h2>
+        <span class="mq-hint">drag or swipe →</span>
+      </div>
+      </div>
+    <Projects />
   </section>
 
   
@@ -161,30 +168,7 @@ const jsonld = {
     </div>
   </section>
 
-  <section class="section" id="now" style="padding-top:2rem">
-    <div class="wrap">
-      <span class="eyebrow" style="--c:var(--green)" data-reveal>Now</span>
-      <h2 class="h2" data-reveal>What I'm figuring out.</h2>
-      <div class="now">
-        <div class="panel" data-reveal>
-          <h3>Open questions</h3>
-          <ul>
-            {questions.map((x, i) => (
-              <li style={`--c:${colors[i + 1]}`}>{x.q}<span>{x.href ? <a href={x.href}>{x.a}</a> : x.a}</span></li>
-            ))}
-          </ul>
-        </div>
-        <div class="panel" data-reveal style="--d:100ms">
-          <h3>Changelog for this site</h3>
-          <ul>
-            {log.map((l) => (
-              <li><time datetime={l.date}>{fmt(l.date)}</time>{l.text}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
+  
 
   <section class="section" id="contact" style="padding-top:2rem">
     <div class="wrap">

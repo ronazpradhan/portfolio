@@ -65,7 +65,16 @@ code, pre { font-family: var(--mono); font-size: 0.85em; }
 .btn svg { width: 1.1rem; height: 1.1rem; }
 
 /* Hero */
-.hero { position: relative; padding-block: clamp(3.5rem, 9vw, 7rem) clamp(4rem, 9vw, 6rem); }
+.hero { position: relative; padding-block: clamp(2.5rem, 6vw, 4.5rem) clamp(1.5rem, 3vw, 2.5rem); }
+.status { display: inline-flex; align-items: center; gap: 0.55rem; padding: 0.45rem 0.85rem 0.45rem 0.7rem; border-radius: 999px; border: 1px solid var(--line); background: var(--bg-2); font-size: 0.875rem; color: #cfd1e4; margin-bottom: 1.6rem; }
+.status i { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 0 rgb(47 214 123 / 0.6); animation: ping 2s infinite; }
+@keyframes ping { 70% { box-shadow: 0 0 0 0.5rem rgb(47 214 123 / 0); } 100% { box-shadow: 0 0 0 0 rgb(47 214 123 / 0); } }
+.hero h1 .ch { display: inline-block; }
+@media (prefers-reduced-motion: no-preference) {
+  .hero h1 .ch { animation: drop 0.9s var(--ease) both; animation-delay: calc(var(--i) * 35ms); }
+  .hero h1 .accent .ch { animation-name: drop, hue; animation-duration: 0.9s, 6s; animation-iteration-count: 1, infinite; animation-direction: normal, alternate; }
+}
+@keyframes drop { from { opacity: 0; transform: translateY(0.45em) rotate(6deg); } }
 .hero::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
   background:
     radial-gradient(40rem 26rem at 8% 0%, rgb(77 141 255 / 0.16), transparent 60%),
@@ -76,41 +85,44 @@ code, pre { font-family: var(--mono); font-size: 0.85em; }
 .hero-grid { display: grid; gap: 3rem; align-items: center; }
 .hero h1 { font-size: clamp(3rem, 11vw, 8rem); font-weight: 700; line-height: 0.92; letter-spacing: -0.04em; }
 .hero h1 span { display: block; }
-.hero h1 .accent { background: linear-gradient(90deg, var(--yellow), var(--red) 55%, var(--blue)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero h1 .accent .ch { color: var(--cc); }
+@keyframes hue { to { filter: hue-rotate(-25deg) saturate(1.2); } }
 .tagline { font-size: clamp(1.2rem, 2.6vw, 1.6rem); line-height: 1.45; color: #d9d8e4; max-width: 38ch; margin-top: 2rem; }
 .tagline strong { color: var(--fg); font-weight: 600; }
-.hero .ctas { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2.2rem; }
+.hero .ctas { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
+.hero-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 0 3rem; }
+@media (min-width: 64rem) { .hero .ctas { margin-top: 0; } }
 .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 2.2rem; padding: 0; list-style: none; }
 .chips li { font: 500 0.8125rem/1 var(--mono); padding: 0.5rem 0.75rem; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
 
-/* Project marquee: two identical lists slide left forever; the second copy is hidden from assistive tech. */
-.marquee { margin-top: 3rem; padding-block: 3rem; overflow: hidden; background: radial-gradient(ellipse at 50% 30%, #17704a, var(--felt) 60%, #0a3624); box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06), inset 0 30px 80px rgb(0 0 0 / 0.25);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
-.mq-track { display: flex; width: max-content; animation: slide 38s linear infinite; }
-.marquee:hover .mq-track, .marquee:focus-within .mq-track { animation-play-state: paused; }
-.hand { list-style: none; margin: 0; padding: 0 0.75rem; display: flex; gap: 1.5rem; }
-.hand > li { width: 18rem; flex: none; padding-block: 1rem; }
-.hand > li .card { transform: rotate(var(--tilt)); }
-.hand > li .card:hover, .hand > li .card:focus-visible { transform: rotate(0) translateY(-0.75rem) scale(1.03); box-shadow: 0 40px 60px -20px rgb(0 0 0 / 0.7); }
-@keyframes slide { to { transform: translateX(-50%); } }
-@media (prefers-reduced-motion: reduce) {
-  .marquee { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
-  .mq-track { animation: none; }
-  .hand[aria-hidden] { display: none; }
-}
-.card { display: flex; flex-direction: column; height: 100%; min-height: 27rem; background: var(--paper); color: var(--ink); border-radius: 1.1rem; padding: 1rem; text-decoration: none; position: relative; box-shadow: 0 1px 0 rgb(255 255 255 / 0.6) inset, 0 20px 40px -14px rgb(0 0 0 / 0.55); transition: transform 0.5s var(--ease), box-shadow 0.4s; }
-.card .corner { position: absolute; font: 700 1.15rem/1 var(--display); text-align: center; color: var(--suit); }
-.card .corner span { display: block; font-size: 1rem; margin-top: 0.15rem; }
-.card .tl { top: 0.9rem; left: 0.9rem; }
-.card .br { bottom: 0.9rem; right: 0.9rem; transform: rotate(180deg); }
-.card .art { margin: 1.9rem 1.4rem 0; border-radius: 0.7rem; overflow: hidden; aspect-ratio: 4 / 3; background: #ece6d8; display: grid; place-items: center; }
-.card .art img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
-.card .body { padding: 1.1rem 1.4rem 1.6rem; display: flex; flex-direction: column; gap: 0.45rem; flex: 1; }
-.card h3 { font-size: 1.35rem; }
-.card p { font-size: 0.9375rem; line-height: 1.5; color: #4a4852; }
-.card .tags { margin-top: auto; padding-top: 0.6rem; font: 500 0.6875rem/1.4 var(--mono); color: #6c6a73; }
-.card .go { font: 600 0.8125rem var(--body); color: var(--suit); }
-.suit-r { --suit: #d6293a; } .suit-b { --suit: #1c1b22; }
+/* Project carousel: auto-drifts via JS, but it's a real scroll container, so drag/swipe/trackpad all work. */
+.marquee { margin-top: 1.25rem; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; cursor: grab; padding-block: 1rem 2rem; outline-offset: -2px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); }
+.marquee::-webkit-scrollbar { display: none; }
+.marquee.dragging { cursor: grabbing; user-select: none; }
+.marquee.dragging .pcard { pointer-events: none; }
+.mq-track { display: flex; width: max-content; }
+.projects { list-style: none; margin: 0; padding: 0 0.75rem; display: flex; gap: 1.5rem; }
+.projects > li { width: min(84vw, 21rem); flex: none; }
+.pcard { display: flex; flex-direction: column; height: 100%; text-decoration: none; border-radius: 1.4rem; background: var(--bg-2); border: 1px solid var(--line); overflow: hidden; transition: transform 0.45s var(--ease), border-color 0.3s, box-shadow 0.45s; -webkit-user-drag: none; }
+.pcard:hover, .pcard:focus-visible { transform: translateY(-8px); border-color: color-mix(in srgb, var(--c) 55%, transparent); box-shadow: 0 30px 60px -25px color-mix(in srgb, var(--c) 45%, transparent); }
+.pcard .art { aspect-ratio: 16 / 10; overflow: hidden; display: grid; place-items: center; background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--c) 30%, transparent), transparent 70%), var(--bg-3); }
+.pcard .art img { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform 0.6s var(--ease); }
+.pcard:hover .art img { transform: scale(1.05); }
+.pcard .art svg { width: 70%; }
+.pcard .glyph { font: 700 4.5rem/1 var(--display); color: var(--c); }
+.pcard .body { padding: 1.3rem 1.4rem 1.5rem; display: flex; flex-direction: column; gap: 0.55rem; flex: 1; }
+.pcard .kind { font: 500 0.75rem var(--mono); color: var(--c); }
+.pcard h3 { font-size: 1.45rem; }
+.pcard p { font-size: 0.9375rem; line-height: 1.55; color: var(--muted); }
+.ptags { list-style: none; padding: 0; margin: auto 0 0; padding-top: 0.6rem; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.ptags li { font: 500 0.6875rem/1 var(--mono); padding: 0.4rem 0.55rem; border-radius: 999px; background: var(--bg-3); color: #cfd1e4; }
+.pcard .go { margin-top: 0.6rem; font-weight: 600; font-size: 0.9375rem; }
+.pcard:hover .go { color: var(--c); }
+.work-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+.work-head h2 { font-size: clamp(1.3rem, 2.5vw, 1.75rem); }
+.mq-hint { font: 0.8125rem var(--mono); color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { .projects[aria-hidden] { display: none; } }
 
 /* Trust demo */
 .demo { display: grid; gap: 1.25rem; margin-top: 3rem; }
